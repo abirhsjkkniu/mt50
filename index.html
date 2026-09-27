@@ -1,0 +1,2311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grammar Focus — The Copyeditor's Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F7F3EA;
+    --paper-dim:#EFE9DA;
+    --card:#FFFDF8;
+    --ink:#21252B;
+    --ink-soft:#4B5158;
+    --rule-line:#DBD3BE;
+    --red:#B23A2E;
+    --red-soft:#E7C9C4;
+    --green:#2F6E4F;
+    --green-soft:#CFE0D3;
+    --gold:#A67C3D;
+
+    --secA:#3B6E8F; --secA-soft:#D9E4EC;
+    --secB:#2F6E4F; --secB-soft:#D9E9DF;
+    --secC:#6B4C7A; --secC-soft:#E5DBEA;
+    --secD:#2A7F7F; --secD-soft:#D6EAEA;
+    --secE:#B5651D; --secE-soft:#F1DFC9;
+    --secF:#8A6D3B; --secF-soft:#EAE0CB;
+    --secG:#7A4B4B; --secG-soft:#E9D9D9;
+    --secH:#4B5A6B; --secH-soft:#DDE1E6;
+
+    --radius: 10px;
+    --shadow: 0 1px 2px rgba(33,37,43,0.06), 0 6px 20px -10px rgba(33,37,43,0.18);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.serif{font-family:'Source Serif 4',serif;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  /* subtle paper grain via layered gradients */
+  body::before{
+    content:"";
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(33,37,43,0.015) 0px, rgba(33,37,43,0.015) 1px, transparent 1px, transparent 3px);
+    opacity:.5;
+  }
+
+  a{color:inherit;}
+
+  /* ===== Top bar ===== */
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    background:var(--paper);
+    border-bottom:1px solid var(--rule-line);
+  }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto; padding:14px 24px;
+    display:flex; align-items:center; gap:18px; justify-content:space-between;
+  }
+  .brand{display:flex; align-items:baseline; gap:10px;}
+  .brand .mark{
+    width:34px;height:34px;border-radius:50%;
+    border:1.5px solid var(--red);
+    color:var(--red);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:12px;
+    transform:rotate(-8deg);
+    flex:none;
+  }
+  .brand h1{font-size:19px; margin:0; font-weight:600; letter-spacing:.2px;}
+  .brand .sub{font-size:12px; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace;}
+
+  .modeSwitch{
+    display:flex; background:var(--paper-dim); border-radius:999px; padding:3px;
+    border:1px solid var(--rule-line);
+  }
+  .modeSwitch button{
+    border:none; background:transparent; padding:8px 16px; border-radius:999px;
+    font-family:'Inter',sans-serif; font-weight:600; font-size:13px; cursor:pointer;
+    color:var(--ink-soft);
+  }
+  .modeSwitch button.active{background:var(--ink); color:var(--paper);}
+
+  .container{max-width:1180px; margin:0 auto; padding:28px 24px 80px; position:relative; z-index:1;}
+
+  /* ===== Browse layout ===== */
+  .browseGrid{display:grid; grid-template-columns:230px 1fr; gap:28px; align-items:start;}
+  @media (max-width:860px){ .browseGrid{grid-template-columns:1fr;} }
+
+  .toc{position:sticky; top:78px;}
+  .toc-title{font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-soft); margin:0 0 10px 4px; font-weight:600;}
+  .toc-item{
+    display:flex; align-items:center; gap:10px;
+    padding:8px 10px; border-radius:8px; cursor:pointer;
+    font-size:13.5px; margin-bottom:2px; color:var(--ink-soft); font-weight:500;
+  }
+  .toc-item:hover{background:var(--paper-dim);}
+  .toc-item.active{background:var(--card); box-shadow:var(--shadow); color:var(--ink);}
+  .toc-dot{width:9px;height:9px;border-radius:50%; flex:none;}
+  .toc-count{margin-left:auto; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-soft); opacity:.7;}
+
+  .search{
+    width:100%; padding:10px 12px; border:1px solid var(--rule-line); border-radius:8px;
+    background:var(--card); font-family:'Inter',sans-serif; font-size:13.5px; margin-bottom:16px;
+    color:var(--ink);
+  }
+  .search:focus{outline:2px solid var(--gold); outline-offset:1px;}
+
+  .sectionHead{
+    display:flex; align-items:baseline; gap:12px; margin:36px 0 16px;
+  }
+  .sectionHead:first-child{margin-top:0;}
+  .sectionHead .num{
+    font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600;
+    width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    color:#fff; flex:none;
+  }
+  .sectionHead h2{font-size:22px; margin:0; font-weight:600;}
+  .sectionHead .count{font-size:12px; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace;}
+
+  .ruleGrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px;}
+
+  .ruleCard{
+    background:var(--card); border:1px solid var(--rule-line); border-radius:var(--radius);
+    padding:16px 16px 14px; box-shadow:var(--shadow); cursor:pointer;
+    transition:transform .12s ease, box-shadow .12s ease;
+    position:relative;
+  }
+  .ruleCard:hover{transform:translateY(-2px); box-shadow:0 2px 4px rgba(33,37,43,.08), 0 14px 26px -12px rgba(33,37,43,.28);}
+  .ruleCard .stamp{
+    display:inline-flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:11px;
+    padding:3px 8px; border-radius:999px; margin-bottom:10px;
+    border:1.3px solid currentColor;
+  }
+  .ruleCard h3{font-size:16px; margin:0 0 10px; line-height:1.3; font-weight:600;}
+  .ruleCard .snippet{font-size:12.5px; color:var(--ink-soft); line-height:1.55;}
+  .ruleCard .snippet .x{color:var(--red); text-decoration:line-through; text-decoration-thickness:1.5px;}
+  .ruleCard .snippet .ck{color:var(--green); font-weight:600;}
+  .ruleCard .arrow{position:absolute; top:14px; right:14px; color:var(--ink-soft); opacity:.4; font-size:13px;}
+
+  /* ===== Modal detail ===== */
+  .overlay{
+    position:fixed; inset:0; background:rgba(33,37,43,.45); z-index:100;
+    display:flex; align-items:flex-start; justify-content:center; padding:48px 18px;
+    overflow:auto;
+  }
+  .modal{
+    background:var(--card); max-width:640px; width:100%; border-radius:14px;
+    box-shadow:0 20px 60px -12px rgba(0,0,0,.4); padding:30px 30px 26px; position:relative;
+  }
+  .modal .closeBtn{
+    position:absolute; top:16px; right:16px; border:none; background:var(--paper-dim);
+    width:30px;height:30px;border-radius:50%; cursor:pointer; font-size:15px; color:var(--ink-soft);
+  }
+  .modal .modalStamp{
+    display:inline-flex; align-items:center; gap:8px; font-family:'IBM Plex Mono',monospace;
+    font-weight:600; font-size:12px; padding:4px 10px; border-radius:999px; border:1.4px solid currentColor; margin-bottom:14px;
+  }
+  .modal h2{font-size:23px; margin:0 0 16px; font-weight:600;}
+  .exBlock{border:1px solid var(--rule-line); border-radius:10px; overflow:hidden; margin-bottom:16px;}
+  .exRow{padding:12px 16px; font-size:14.5px; line-height:1.5; display:flex; gap:10px;}
+  .exRow.wrong{background:#FBF2F0; color:#7a2b22;}
+  .exRow.right{background:#F0F6F2; color:#20492f;}
+  .exRow .tag{font-family:'IBM Plex Mono',monospace; font-size:10.5px; font-weight:700; flex:none; padding-top:2px;}
+  .exRow.wrong .tag{color:var(--red);}
+  .exRow.right .tag{color:var(--green);}
+  .explainBox{
+    font-size:14px; line-height:1.6; color:var(--ink); background:var(--paper-dim);
+    border-radius:10px; padding:14px 16px; margin-bottom:18px;
+  }
+  .explainBox b{color:var(--ink);}
+
+  .quizBox{border-top:1px dashed var(--rule-line); padding-top:18px;}
+  .quizBox .qLabel{font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-soft); font-weight:700; margin-bottom:8px;}
+  .quizBox .qSentence{font-size:15px; margin-bottom:12px; font-family:'Source Serif 4',serif;}
+  .choiceRow{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;}
+  .choiceBtn{
+    padding:9px 16px; border-radius:8px; border:1.5px solid var(--rule-line); background:var(--card);
+    font-family:'Inter',sans-serif; font-size:13.5px; font-weight:600; cursor:pointer; color:var(--ink);
+  }
+  .choiceBtn:hover{border-color:var(--gold);}
+  .choiceBtn.correct{background:var(--green-soft); border-color:var(--green); color:#1c3d29;}
+  .choiceBtn.incorrect{background:var(--red-soft); border-color:var(--red); color:#6b241b;}
+  .quizWhy{font-size:13px; color:var(--ink-soft); background:var(--paper-dim); padding:10px 13px; border-radius:8px; margin-top:6px; display:none;}
+  .quizWhy.show{display:block;}
+
+  /* ===== Study mode ===== */
+  .studyWrap{max-width:640px; margin:0 auto;}
+  .statBar{display:flex; gap:10px; margin-bottom:22px; flex-wrap:wrap;}
+  .statPill{
+    flex:1; min-width:110px; background:var(--card); border:1px solid var(--rule-line); border-radius:10px;
+    padding:12px 14px; text-align:center; box-shadow:var(--shadow);
+  }
+  .statPill .n{font-family:'IBM Plex Mono',monospace; font-size:20px; font-weight:600; display:block;}
+  .statPill .l{font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); font-weight:600;}
+
+  .card3d{
+    background:var(--card); border:1px solid var(--rule-line); border-radius:16px;
+    box-shadow:0 2px 4px rgba(33,37,43,.06), 0 24px 50px -20px rgba(33,37,43,.35);
+    padding:34px 32px; min-height:280px; display:flex; flex-direction:column;
+  }
+  .card3d .stamp{align-self:flex-start;}
+  .cardFront{font-family:'Source Serif 4',serif; font-size:19px; line-height:1.55; margin:18px 0 22px;}
+  .cardFront .blank{
+    display:inline-block; border-bottom:2px solid var(--gold); min-width:70px; text-align:center; font-weight:600;
+  }
+  .cardChoices{display:flex; gap:12px; margin-top:auto; flex-wrap:wrap;}
+  .cardChoiceBtn{
+    flex:1; min-width:140px; padding:14px 16px; border-radius:10px; border:1.6px solid var(--rule-line);
+    background:var(--paper-dim); font-family:'Inter',sans-serif; font-weight:600; font-size:14.5px; cursor:pointer; color:var(--ink);
+  }
+  .cardChoiceBtn:hover{border-color:var(--gold);}
+  .cardChoiceBtn.correct{background:var(--green-soft); border-color:var(--green); color:#1c3d29;}
+  .cardChoiceBtn.incorrect{background:var(--red-soft); border-color:var(--red); color:#6b241b;}
+
+  .revealBox{margin-top:20px; border-top:1px dashed var(--rule-line); padding-top:18px;}
+  .revealBox .ruleLine{font-size:14px; line-height:1.6; color:var(--ink); margin-bottom:14px;}
+  .rateRow{display:flex; gap:8px; flex-wrap:wrap;}
+  .rateBtn{
+    flex:1; min-width:110px; padding:11px 10px; border-radius:9px; border:none; cursor:pointer;
+    font-family:'Inter',sans-serif; font-weight:700; font-size:12.5px; color:#fff;
+  }
+  .rateBtn.again{background:#A6362B;}
+  .rateBtn.hard{background:#B5651D;}
+  .rateBtn.good{background:#2F6E4F;}
+  .rateBtn.easy{background:#2A6E7F;}
+  .rateBtn .sub{display:block; font-weight:500; opacity:.85; font-size:10.5px; margin-top:2px; font-family:'IBM Plex Mono',monospace;}
+
+  .doneCard{
+    text-align:center; padding:60px 30px; background:var(--card); border:1px solid var(--rule-line);
+    border-radius:16px; box-shadow:var(--shadow);
+  }
+  .doneCard h2{font-size:22px; margin:0 0 8px;}
+  .doneCard p{color:var(--ink-soft); font-size:14px; margin:0 0 20px;}
+
+  .ghostBtn{
+    display:inline-block; padding:10px 18px; border-radius:8px; border:1.5px solid var(--ink);
+    background:transparent; font-weight:600; font-size:13.5px; cursor:pointer; color:var(--ink);
+    font-family:'Inter',sans-serif;
+  }
+  .ghostBtn:hover{background:var(--ink); color:var(--paper);}
+  .primaryBtn{
+    display:inline-block; padding:10px 18px; border-radius:8px; border:none;
+    background:var(--ink); color:var(--paper); font-weight:600; font-size:13.5px; cursor:pointer;
+    font-family:'Inter',sans-serif;
+  }
+
+  .toolsRow{display:flex; gap:10px; justify-content:center; margin-top:14px; flex-wrap:wrap;}
+
+  .progressTrack{height:6px; background:var(--rule-line); border-radius:99px; overflow:hidden; margin-bottom:22px;}
+  .progressFill{height:100%; background:var(--gold); transition:width .2s ease;}
+
+  .noteBanner{
+    font-size:12.5px; color:var(--ink-soft); background:var(--paper-dim); border:1px solid var(--rule-line);
+    border-radius:8px; padding:10px 14px; margin-bottom:22px; line-height:1.5;
+  }
+  .noteBanner b{color:var(--ink);}
+
+  .boxLegend{display:flex; gap:14px; flex-wrap:wrap; font-size:11.5px; color:var(--ink-soft); margin-top:6px; justify-content:center;}
+  .boxLegend span{display:flex; align-items:center; gap:5px;}
+  .boxLegend i{width:9px;height:9px;border-radius:50%; display:inline-block;}
+
+  footer{text-align:center; padding:36px 20px 60px; font-size:12px; color:var(--ink-soft);}
+  input[type=file]{display:none;}
+  ::selection{background:#E7C9C4;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="mark">GF</div>
+      <div>
+        <h1>Grammar Focus</h1>
+        <div class="sub">50 rules · the copyeditor's desk</div>
+      </div>
+    </div>
+    <div class="modeSwitch">
+      <button id="btnBrowse" class="active">Browse</button>
+      <button id="btnStudy">Study</button>
+    </div>
+  </div>
+</div>
+
+<div class="container" id="app"></div>
+
+<footer>Adapted for personal study &mdash; original 50-rule framework by Helen Mathur, majortests.com.</footer>
+
+<script>
+/* =========================================================
+   DATA — 50 rules, 8 sections
+========================================================= */
+const SECTIONS = [
+  {key:'A', name:'Pronouns', color:'--secA', soft:'--secA-soft'},
+  {key:'B', name:'Verb agreement', color:'--secB', soft:'--secB-soft'},
+  {key:'C', name:'Verb tense, voice & mood', color:'--secC', soft:'--secC-soft'},
+  {key:'D', name:'Parallelism', color:'--secD', soft:'--secD-soft'},
+  {key:'E', name:'Dangling & misplaced modifiers', color:'--secE', soft:'--secE-soft'},
+  {key:'F', name:'Idiom & diction', color:'--secF', soft:'--secF-soft'},
+  {key:'G', name:'Punctuation', color:'--secG', soft:'--secG-soft'},
+  {key:'H', name:'Miscellaneous', color:'--secH', soft:'--secH-soft'},
+];
+
+const RULES = [
+{id:'A01',sec:'A',title:'Compound subjects',
+ rule:"When a pronoun is part of a compound subject joined by <b>and</b>, use the subject form (I, he, she, we, they, who).",
+ wrong:"My cousin and me are driving to the coast tomorrow.",
+ right:"My cousin and I are driving to the coast tomorrow.",
+ q:"Choose the correct pronoun: <em>Marcus and ___ finished the project early.</em>",
+ choices:["me","I"], answer:1,
+ why:"Test the pronoun alone: “I finished the project early” sounds right, so <b>I</b> is correct."},
+
+{id:'A02',sec:'A',title:'Compound objects',
+ rule:"When a pronoun is part of a compound object joined by <b>and</b>, use the object form (me, him, her, us, them, whom).",
+ wrong:"The coach praised Diego and I after the match.",
+ right:"The coach praised Diego and me after the match.",
+ q:"Choose the correct pronoun: <em>The teacher handed the awards to Priya and ___.</em>",
+ choices:["I","me"], answer:1,
+ why:"Isolate it: “handed the awards to me” — the object form is needed."},
+
+{id:'A03',sec:'A',title:'Pronoun predicates',
+ rule:"After a form of <b>to be</b> (am, is, are, was, were, will be), use the subject form of a pronoun — the verb doesn't take an object.",
+ wrong:"The one who called was her.",
+ right:"The one who called was she.",
+ q:"Choose correctly: <em>It could have been ___ who left the note.</em>",
+ choices:["him","he"], answer:1,
+ why:"Reverse it: “He was it” sounds fine; “Him was it” doesn't."},
+
+{id:'A04',sec:'A',title:'Pronouns in apposition',
+ rule:"A pronoun that renames a noun, set off by commas, takes the same case as that noun.",
+ wrong:"The manager promoted two employees, Sara and I.",
+ right:"The manager promoted two employees, Sara and me.",
+ q:"Choose correctly: <em>The prize went to the finalists, Omar and ___.</em>",
+ choices:["I","me"], answer:1,
+ why:"“The prize went to me” confirms the object case."},
+
+{id:'A05',sec:'A',title:'Pronoun–noun pairs',
+ rule:"In phrases like “we runners” or “us fans,” ignore the noun and test the pronoun on its own.",
+ wrong:"Us volunteers arrived early to set up chairs.",
+ right:"We volunteers arrived early to set up chairs.",
+ q:"Choose correctly: <em>The director thanked ___ interns for staying late.</em>",
+ choices:["we","us"], answer:1,
+ why:"“Thanked us” — drop the noun “interns” to hear the object case clearly."},
+
+{id:'A06',sec:'A',title:'Pronouns in comparisons',
+ rule:"After <b>than</b> or <b>as</b> in a comparison, mentally supply the missing verb to find the correct case.",
+ wrong:"My sister types faster than me.",
+ right:"My sister types faster than I.",
+ q:"Choose correctly: <em>He has read more novels than ___.</em>",
+ choices:["her","she"], answer:1,
+ why:"Complete it silently: “more novels than she (has read).”"},
+
+{id:'A07',sec:'A',title:'Pronouns after prepositions',
+ rule:"Pronouns following a preposition (to, for, with, between, except…) take the object form.",
+ wrong:"Keep this secret between you and I.",
+ right:"Keep this secret between you and me.",
+ q:"Choose correctly: <em>Everyone except ___ arrived on time.</em>",
+ choices:["he","him"], answer:1,
+ why:"“Except” is a preposition, so it takes the object form."},
+
+{id:'A08',sec:'A',title:'Who and whom',
+ rule:"Use <b>who / whoever</b> for the subject of a clause, and <b>whom / whomever</b> for the object — test by isolating and rewording the clause.",
+ wrong:"Give the tickets to whomever arrives first.",
+ right:"Give the tickets to whoever arrives first.",
+ q:"Choose correctly: <em>___ did you invite to the ceremony?</em>",
+ choices:["Who","Whom"], answer:1,
+ why:"Reword it: “you invited whom” — the object of “invited.”"},
+
+{id:'A09',sec:'A',title:'Pronouns and gerunds',
+ rule:"A pronoun that sits directly before a gerund (an <em>-ing</em> word used as a noun) should be possessive.",
+ wrong:"I was surprised by him quitting so suddenly.",
+ right:"I was surprised by his quitting so suddenly.",
+ q:"Choose correctly: <em>Nobody minds ___ arriving late, since traffic was terrible.</em>",
+ choices:["them","their"], answer:1,
+ why:"“Their arriving” — the gerund needs a possessive pronoun in front of it."},
+
+{id:'A10',sec:'A',title:'Possessive pronouns & adjectives',
+ rule:"Possessive pronouns and adjectives (its, whose, yours, ours, theirs) never take an apostrophe.",
+ wrong:"The company changed it's logo last year.",
+ right:"The company changed its logo last year.",
+ q:"Choose correctly: <em>___ turn is it to present next?</em>",
+ choices:["Who's","Whose"], answer:1,
+ why:"“Whose” is possessive; “who's” means “who is.”"},
+
+{id:'B01',sec:'B',title:'Verb–subject agreement',
+ rule:"A verb must agree with its true subject, even when a phrase (with, along with, as well as, together with…) comes between them.",
+ wrong:"The playlist, along with several podcasts, were downloaded overnight.",
+ right:"The playlist, along with several podcasts, was downloaded overnight.",
+ q:"Choose correctly: <em>The recipe, together with all the ingredients, ___ ready on the counter.</em>",
+ choices:["is","are"], answer:0,
+ why:"“The recipe… is ready” — ignore the “together with” phrase."},
+
+{id:'B02',sec:'B',title:"Compound subjects linked by 'and'",
+ rule:"Two singular subjects joined by <b>and</b> form a compound subject and need a plural verb.",
+ wrong:"The printer and the scanner needs to be replaced.",
+ right:"The printer and the scanner need to be replaced.",
+ q:"Choose correctly: <em>A violinist and a cellist ___ performing tonight.</em>",
+ choices:["is","are"], answer:1,
+ why:"Two items joined by “and” form a plural subject."},
+
+{id:'B03',sec:'B',title:'Subject placed after the verb',
+ rule:"When word order is inverted (the subject follows the verb), the verb still must agree with the real subject.",
+ wrong:"There was a laptop and two chargers left on the desk.",
+ right:"There were a laptop and two chargers left on the desk.",
+ q:"Choose correctly: <em>___ the students and the teacher ready to begin?</em>",
+ choices:["Is","Are"], answer:1,
+ why:"Ask “who is ready?” — the students and the teacher, a plural subject."},
+
+{id:'B04',sec:'B',title:'Either and neither',
+ rule:"<b>Either</b> and <b>neither</b>, used alone (without or/nor), are singular.",
+ wrong:"Neither of the applicants have the required certification.",
+ right:"Neither of the applicants has the required certification.",
+ q:"Choose correctly: <em>Either of the routes ___ longer than expected.</em>",
+ choices:["seem","seems"], answer:1,
+ why:"“Either” is singular — ignore “of the routes.”"},
+
+{id:'B05',sec:'B',title:'Neither…nor and either…or',
+ rule:"In <b>neither…nor</b> / <b>either…or</b> constructions, the verb agrees with the closer subject.",
+ wrong:"Neither the manager nor the employees was informed.",
+ right:"Neither the manager nor the employees were informed.",
+ q:"Choose correctly: <em>Either the students or the teacher ___ responsible for locking up.</em>",
+ choices:["is","are"], answer:0,
+ why:"The verb matches the nearer subject, “the teacher” (singular)."},
+
+{id:'B06',sec:'B',title:'Singular indefinite pronouns',
+ rule:"Words like someone, everybody, each, either, neither, nobody, no one, and “none” take a singular verb.",
+ wrong:"Everybody on the two teams want to win.",
+ right:"Everybody on the two teams wants to win.",
+ q:"Choose correctly: <em>None of the boxes ___ been opened yet.</em>",
+ choices:["has","have"], answer:0,
+ why:"Treat “none” as singular; ignore “of the boxes.”"},
+
+{id:'B07',sec:'B',title:'Latin and Greek plurals',
+ rule:"Data, criteria, phenomena, and media are plural; datum, criterion, phenomenon, and medium are their singular forms.",
+ wrong:"The criteria for admission is unclear.",
+ right:"The criteria for admission are unclear.",
+ q:"Choose correctly: <em>This unusual phenomenon ___ never been explained.</em>",
+ choices:["has","have"], answer:0,
+ why:"“Phenomenon” is singular, so it takes “has.”"},
+
+{id:'B08',sec:'B',title:'Collective nouns',
+ rule:"Collective nouns (team, jury, committee, orchestra) usually take a singular verb, since the group acts as one unit.",
+ wrong:"The committee are meeting on Thursday.",
+ right:"The committee is meeting on Thursday.",
+ q:"Choose correctly: <em>The band ___ releasing a new album next month.</em>",
+ choices:["is","are"], answer:0,
+ why:"Treat the collective noun “band” as a single unit."},
+
+{id:'B09',sec:'B',title:'A number of / the number of',
+ rule:"“A number of” takes a plural verb; “the number of” takes a singular verb.",
+ wrong:"The number of complaints have increased this quarter.",
+ right:"The number of complaints has increased this quarter.",
+ q:"Choose correctly: <em>A number of applicants ___ withdrawn from consideration.</em>",
+ choices:["has","have"], answer:1,
+ why:"“A number of” behaves as a plural."},
+
+{id:'C01',sec:'C',title:'Past perfect tense',
+ rule:"Use the simple past for a single past event; use the past perfect (had + past participle) for an earlier event relative to another past event.",
+ wrong:"By the time she called, I already left the office.",
+ right:"By the time she called, I had already left the office.",
+ q:"Choose correctly: <em>He realized he ___ his passport at home.</em>",
+ choices:["forgot","had forgotten"], answer:1,
+ why:"Forgetting happened before realizing, so use the past perfect."},
+
+{id:'C02',sec:'C',title:'Present perfect tense',
+ rule:"Use the present perfect (has/have + past participle) for actions that began in the past and continue, or just finished — especially with “since.”",
+ wrong:"She works at that firm since 2019.",
+ right:"She has worked at that firm since 2019.",
+ q:"Choose correctly: <em>They ___ in this apartment for six years.</em>",
+ choices:["lived","have lived"], answer:1,
+ why:"The action continues into the present, so use the present perfect."},
+
+{id:'C03',sec:'C',title:'Future perfect tense',
+ rule:"Use the future perfect (will have + past participle) for a future action that will finish before another future point.",
+ wrong:"By next June, she will finish her degree.",
+ right:"By next June, she will have finished her degree.",
+ q:"Choose correctly: <em>By the time you arrive, we ___ dinner.</em>",
+ choices:["will finish","will have finished"], answer:1,
+ why:"Dinner finishes before your arrival, so use the future perfect."},
+
+{id:'C04',sec:'C',title:'General statements in the present',
+ rule:"Use the present tense for facts that are still true, for published works still in existence, and for general observations — even if the reporting verb is past.",
+ wrong:"The report noted that the bridge was over 100 years old.",
+ right:"The report noted that the bridge is over 100 years old.",
+ q:"Choose correctly: <em>In his novel, the author ___ that memory is unreliable.</em>",
+ choices:["argued","argues"], answer:1,
+ why:"A published work still exists, so describe its content in the present tense."},
+
+{id:'C05',sec:'C',title:'Future and conditional tenses',
+ rule:"Don't follow a past-tense reporting verb with “will” (use “would”), and don't follow a present-tense reporting verb with “would” (use “will”).",
+ wrong:"She promised that she will call tonight.",
+ right:"She promised that she would call tonight.",
+ q:"Choose correctly: <em>The forecast states that it ___ rain tomorrow.</em>",
+ choices:["would","will"], answer:1,
+ why:"“States” is present tense, so pair it with “will,” not “would.”"},
+
+{id:'C06',sec:'C',title:"'If' constructions",
+ rule:"Match tenses across if-clauses: present→will, past→would, past perfect→would have, subjunctive→would. Never put “would” inside the if-clause.",
+ wrong:"If I would have known, I would have come earlier.",
+ right:"If I had known, I would have come earlier.",
+ q:"Choose correctly: <em>If she ___ harder, she would pass the exam.</em>",
+ choices:["studied","would study"], answer:0,
+ why:"The if-clause never takes “would” — use the plain past tense."},
+
+{id:'C07',sec:'C',title:'The passive voice',
+ rule:"Prefer the active voice, which names who performs the action, over the passive voice, which can leave it vague.",
+ wrong:"Mistakes were made during the audit.",
+ right:"The accountant made mistakes during the audit.",
+ q:"Which version is more direct?",
+ choices:["The cake was baked by Elena.","Elena baked the cake."], answer:1,
+ why:"The active version states plainly who performed the action."},
+
+{id:'C08',sec:'C',title:'Subjunctive for hypotheticals',
+ rule:"Use <b>were</b> instead of <b>was</b> for hypothetical, contrary-to-fact, or highly unlikely situations.",
+ wrong:"If I was taller, I'd try out for the team.",
+ right:"If I were taller, I'd try out for the team.",
+ q:"Choose correctly: <em>I wish it ___ warmer outside right now.</em>",
+ choices:["was","were"], answer:1,
+ why:"A wish contrary to current fact calls for the subjunctive “were.”"},
+
+{id:'C09',sec:'C',title:'Subjunctive in indirect commands',
+ rule:"After strong recommendations or requirements (“it is essential that,” “the policy requires that”), use the base form of the verb — drop “to.”",
+ wrong:"The board recommended that she accepts the position immediately.",
+ right:"The board recommended that she accept the position immediately.",
+ q:"Choose correctly: <em>The rule requires that every visitor ___ in at the front desk.</em>",
+ choices:["signs","sign"], answer:1,
+ why:"An indirect command after “requires that” takes the subjunctive base form."},
+
+{id:'D01',sec:'D',title:'Lists',
+ rule:"Every item in a list or series should share the same grammatical form.",
+ wrong:"Her hobbies include painting, hiking, and to read.",
+ right:"Her hobbies include painting, hiking, and reading.",
+ q:"Choose the parallel version:",
+ choices:["He likes to swim, biking, and running.","He likes swimming, biking, and running."], answer:1,
+ why:"All three items should share the same -ing form."},
+
+{id:'D02',sec:'D',title:'Paired conjunctions',
+ rule:"With paired conjunctions (both…and, either…or, not only…but also), match the grammatical form on each side.",
+ wrong:"She is both a talented writer and paints well.",
+ right:"She is both a talented writer and a skilled painter.",
+ q:"Choose the correct version:",
+ choices:["He not only missed the meeting but also the deadline.","He missed not only the meeting but also the deadline."], answer:1,
+ why:"“Not only” and “but also” should introduce matching noun phrases."},
+
+{id:'D03',sec:'D',title:'Verb tense & voice continuity',
+ rule:"Keep verb tense and voice consistent within a sentence unless a real shift in time requires otherwise.",
+ wrong:"She cooked dinner, cleaned the kitchen, and is going to bed.",
+ right:"She cooked dinner, cleaned the kitchen, and went to bed.",
+ q:"Choose the correct version:",
+ choices:["He opened the store, restocked the shelves, and greets customers.","He opened the store, restocked the shelves, and greeted customers."], answer:1,
+ why:"All three verbs should stay in the same past tense."},
+
+{id:'D04',sec:'D',title:'Pronoun continuity',
+ rule:"Keep pronoun person and number consistent throughout a sentence — don't drift between “one,” “you,” and “they” without reason.",
+ wrong:"If a student studies hard, you will do well on the exam.",
+ right:"If students study hard, they will do well on the exam.",
+ q:"Choose the consistent version:",
+ choices:["Anyone who finishes early may leave, but you should sign out first.","Anyone who finishes early may leave, but they should sign out first."], answer:1,
+ why:"Stay with the same pronoun as the antecedent “anyone” throughout."},
+
+{id:'E01',sec:'E',title:'Misplaced words',
+ rule:"Place limiting words (only, just, even, nearly, hardly, almost) directly next to the word they modify, to avoid ambiguity.",
+ wrong:"I only ate two slices of pizza at the party.",
+ right:"I ate only two slices of pizza at the party.",
+ q:"Choose the clearer version:",
+ choices:["She almost drove the whole way without stopping.","She drove almost the whole way without stopping."], answer:1,
+ why:"Placing “almost” next to “the whole way” makes clear she nearly completed the drive, rather than nearly not driving at all."},
+
+{id:'E02',sec:'E',title:'Misplaced parts',
+ rule:"Keep a modifying phrase next to the word it describes — misplacing it can distort the meaning of the sentence.",
+ wrong:"We delivered a package to the neighbor wrapped in brown paper.",
+ right:"We delivered a package wrapped in brown paper to the neighbor.",
+ q:"Choose the clearer version:",
+ choices:["She served cookies to the kids on a silver tray.","She served cookies on a silver tray to the kids."], answer:1,
+ why:"“On a silver tray” belongs next to “cookies,” not next to “the kids.”"},
+
+{id:'E03',sec:'E',title:'Dangling modifiers',
+ rule:"An introductory modifying phrase must be immediately followed by the noun it actually describes, or it \"dangles\" and seems to modify the wrong thing.",
+ wrong:"Walking through the museum, the paintings amazed us.",
+ right:"Walking through the museum, we were amazed by the paintings.",
+ q:"Choose the correct version:",
+ choices:["After finishing the marathon, a hot shower felt wonderful.","After finishing the marathon, I found a hot shower wonderful."], answer:1,
+ why:"The shower didn't finish the marathon — the subject “I” must follow the modifier."},
+
+{id:'F01',sec:'F',title:'Idiom',
+ rule:"Certain word–preposition pairings are fixed by convention rather than logic — for instance, “consider” takes no “as,” and “credited with” pairs with a quality.",
+ wrong:"She is considered as one of the best chefs in the city.",
+ right:"She is considered one of the best chefs in the city.",
+ q:"Choose the idiomatic version:",
+ choices:["He was credited with solving the case.","He was credited to solving the case."], answer:0,
+ why:"“Credited with” is the fixed idiomatic pairing for an achievement."},
+
+{id:'F02',sec:'F',title:'Diction',
+ rule:"A diction error means using the wrong word entirely — learn commonly confused pairs like flaunt/flout, affect/effect, and imply/infer.",
+ wrong:"He flaunted the safety regulations and got fined.",
+ right:"He flouted the safety regulations and got fined.",
+ q:"Choose the correct word: <em>The rain will likely ___ the outdoor concert.</em>",
+ choices:["effect","affect"], answer:1,
+ why:"“Affect” is usually the verb meaning “to influence”; “effect” is usually the noun."},
+
+{id:'G01',sec:'G',title:'The semicolon',
+ rule:"Use a semicolon to join two complete, related sentences without a conjunction — a comma alone creates a comma splice.",
+ wrong:"The meeting ran long, everyone left exhausted.",
+ right:"The meeting ran long; everyone left exhausted.",
+ q:"Choose the correct punctuation:",
+ choices:["The bakery closed early, they'd sold out of bread.","The bakery closed early; they'd sold out of bread."], answer:1,
+ why:"Two complete sentences need a semicolon, period, or conjunction — not just a comma."},
+
+{id:'G02',sec:'G',title:'The apostrophe',
+ rule:"Apostrophes show possession (add 's to a noun) or omission (contractions) — they never appear in possessive pronouns like its, whose, yours, theirs.",
+ wrong:"The dog wagged it's tail at it's owner.",
+ right:"The dog wagged its tail at its owner.",
+ q:"Choose the correct version:",
+ choices:["The students handed in their's assignments.","The students handed in their assignments."], answer:1,
+ why:"“Theirs” never takes an apostrophe."},
+
+{id:'G03',sec:'G',title:'The colon',
+ rule:"A colon introduces a list, definition, or quotation, and the words before it should form a complete sentence.",
+ wrong:"We need to buy: milk, eggs, and bread.",
+ right:"We need to buy three items: milk, eggs, and bread.",
+ q:"Choose the correct version:",
+ choices:["She had one goal: to win the championship.","She had one goal, to win: the championship."], answer:0,
+ why:"The colon follows a complete clause and introduces what the goal is."},
+
+{id:'H01',sec:'H',title:'Which and that',
+ rule:"“Which” and “that” should refer to a clear, specific noun that precedes them — not vaguely to an entire idea.",
+ wrong:"He forgot his umbrella, which meant he got soaked.",
+ right:"He forgot his umbrella, a mistake that meant he got soaked.",
+ q:"Choose the clearer version:",
+ choices:["Sales dropped sharply, which alarmed investors.","Sales dropped sharply, a decline that alarmed investors."], answer:1,
+ why:"Replacing the vague “which” with a noun phrase clarifies exactly what alarmed investors."},
+
+{id:'H02',sec:'H',title:"Among/between and one another/each other",
+ rule:"Use “between” and “each other” for exactly two; use “among” and “one another” for more than two.",
+ wrong:"The three roommates split the rent between themselves.",
+ right:"The three roommates split the rent among themselves.",
+ q:"Choose correctly: <em>The two finalists congratulated ___ after the match.</em>",
+ choices:["one another","each other"], answer:1,
+ why:"Only two finalists are involved, so “each other” is correct."},
+
+{id:'H03',sec:'H',title:'Comparative and superlative',
+ rule:"Use comparative forms (-er/more) for two items and superlative forms (-est/most) for three or more; don't add “more” to a word that's already comparative, like “superior.”",
+ wrong:"Of the two candidates, she is the most qualified.",
+ right:"Of the two candidates, she is the more qualified.",
+ q:"Choose correctly: <em>This is the ___ of all five proposals.</em>",
+ choices:["stronger","strongest"], answer:1,
+ why:"With five items being compared, the superlative form is required."},
+
+{id:'H04',sec:'H',title:'Less/fewer and amount/number',
+ rule:"Use “fewer” and “number” for countable items; use “less” and “amount” for uncountable quantities.",
+ wrong:"There are less apples in this basket than in that one.",
+ right:"There are fewer apples in this basket than in that one.",
+ q:"Choose correctly: <em>We should reduce the ___ of sugar in this recipe.</em>",
+ choices:["number","amount"], answer:1,
+ why:"Sugar is uncountable, so “amount” is correct."},
+
+{id:'H05',sec:'H',title:'Other and else',
+ rule:"When comparing something to the rest of its own category, add “other” or “else” so the item isn't excluded from its own group.",
+ wrong:"This laptop is faster than any computer on the market.",
+ right:"This laptop is faster than any other computer on the market.",
+ q:"Choose correctly: <em>She scored higher than anyone ___ in the class.</em>",
+ choices:["else","other"], answer:0,
+ why:"“Anyone else” correctly excludes her only from the comparison, not from the class."},
+
+{id:'H06',sec:'H',title:'Hopefully',
+ rule:"“Hopefully” is an adverb meaning “in a hopeful manner” — in careful writing, avoid using it to mean “I hope.”",
+ wrong:"Hopefully, the flight won't be delayed.",
+ right:"I hope the flight won't be delayed.",
+ q:"Choose the version where “hopefully” is used correctly:",
+ choices:["Hopefully, we'll get good news soon.","She waited hopefully by the phone for good news."], answer:1,
+ why:"In the second sentence, “hopefully” describes how she waited — a true adverb use."},
+
+{id:'H07',sec:'H',title:'Like',
+ rule:"Use “such as” (not “like”) to introduce members of a category, and use “as” (not “like”) before a clause that has its own verb.",
+ wrong:"Cities like Paris and Rome attract millions of tourists, like I said earlier.",
+ right:"Cities such as Paris and Rome attract millions of tourists, as I said earlier.",
+ q:"Choose correctly: <em>He finished the race ___ he promised.</em>",
+ choices:["like","as"], answer:1,
+ why:"“As” introduces a clause with its own subject and verb (“he promised”)."},
+
+{id:'H08',sec:'H',title:'Comparisons',
+ rule:"Comparisons must compare equivalent things (wages to wages, not wages to a person), and must match singular with singular, plural with plural.",
+ wrong:"The salary at this company is lower than a competitor.",
+ right:"The salary at this company is lower than that of a competitor.",
+ q:"Choose correctly: <em>The reviews for this restaurant are better than ___.</em>",
+ choices:["the one downtown","those for the one downtown"], answer:1,
+ why:"“Reviews” (plural) must be compared to other reviews, not to “the one” (a restaurant)."},
+
+{id:'H09',sec:'H',title:'Hardly and scarcely',
+ rule:"“Hardly” and “scarcely” already function as negatives, so don't pair them with another negative word.",
+ wrong:"I couldn't hardly hear the announcement.",
+ right:"I could hardly hear the announcement.",
+ q:"Choose correctly:",
+ choices:["She hadn't scarcely finished when the phone rang.","She had scarcely finished when the phone rang."], answer:1,
+ why:"Avoid the double negative created by “hadn't scarcely.”"},
+
+{id:'H10',sec:'H',title:'Ellipsis',
+ rule:"Don't drop words that are grammatically necessary to complete a sentence, such as a required preposition or part of a verb.",
+ wrong:"He is interested and skilled at chess.",
+ right:"He is interested in and skilled at chess.",
+ q:"Choose the complete version:",
+ choices:["She has always and will always love painting.","She has always loved and will always love painting."], answer:1,
+ why:"The first verb needs its own complete form (“has always loved”), not a shared fragment."},
+];
+
+const secInfo = k => SECTIONS.find(s=>s.key===k);
+
+/* =========================================================
+   STATE
+========================================================= */
+let mode = 'browse';
+let activeSection = null;
+let searchTerm = '';
+
+// Spaced-repetition progress: { [ruleId]: {box:0-6, due: timestamp, seen:bool} }
+const BOX_INTERVALS_DAYS = [0, 1, 3, 7, 16, 35, 90]; // index = box
+let progress = {};
+RULES.forEach(r => progress[r.id] = {box:0, due: Date.now(), seen:false});
+
+let studyQueue = [];
+let currentCardId = null;
+let cardAnswered = false;
+let cardCorrect = false;
+
+const app = document.getElementById('app');
+const btnBrowse = document.getElementById('btnBrowse');
+const btnStudy = document.getElementById('btnStudy');
+
+btnBrowse.onclick = () => { mode='browse'; render(); };
+btnStudy.onclick = () => { mode='study'; buildQueue(); render(); };
+
+/* =========================================================
+   RENDER: ROUTER
+========================================================= */
+function render(){
+  btnBrowse.classList.toggle('active', mode==='browse');
+  btnStudy.classList.toggle('active', mode==='study');
+  app.innerHTML = '';
+  if(mode==='browse') renderBrowse();
+  else renderStudy();
+}
+
+/* =========================================================
+   BROWSE MODE
+========================================================= */
+function renderBrowse(){
+  const grid = document.createElement('div');
+  grid.className = 'browseGrid';
+
+  // TOC
+  const toc = document.createElement('div');
+  toc.className = 'toc';
+  const tocTitle = document.createElement('div');
+  tocTitle.className = 'toc-title';
+  tocTitle.textContent = 'Sections';
+  toc.appendChild(tocTitle);
+
+  const search = document.createElement('input');
+  search.className = 'search';
+  search.placeholder = 'Search rules…';
+  search.value = searchTerm;
+  search.oninput = e => { searchTerm = e.target.value; renderRuleArea(); };
+  toc.appendChild(search);
+
+  const allItem = tocItem('All rules', null, RULES.length);
+  toc.appendChild(allItem);
+  SECTIONS.forEach(s=>{
+    const count = RULES.filter(r=>r.sec===s.key).length;
+    toc.appendChild(tocItem(s.key+' · '+s.name, s.key, count, s));
+  });
+
+  grid.appendChild(toc);
+
+  const ruleArea = document.createElement('div');
+  ruleArea.id = 'ruleArea';
+  grid.appendChild(ruleArea);
+
+  app.appendChild(grid);
+  renderRuleArea();
+
+  function tocItem(label, key, count, sec){
+    const div = document.createElement('div');
+    div.className = 'toc-item' + (activeSection===key ? ' active' : '');
+    const dot = document.createElement('span');
+    dot.className = 'toc-dot';
+    dot.style.background = sec ? `var(${sec.color})` : 'var(--ink)';
+    div.appendChild(dot);
+    const txt = document.createElement('span');
+    txt.textContent = label;
+    div.appendChild(txt);
+    const c = document.createElement('span');
+    c.className = 'toc-count';
+    c.textContent = count;
+    div.appendChild(c);
+    div.onclick = () => { activeSection = key; renderBrowse(); };
+    return div;
+  }
+}
+
+function renderRuleArea(){
+  const area = document.getElementById('ruleArea');
+  area.innerHTML = '';
+  let sectionsToShow = activeSection ? [secInfo(activeSection)] : SECTIONS;
+
+  sectionsToShow.forEach(sec=>{
+    let rules = RULES.filter(r=>r.sec===sec.key);
+    if(searchTerm.trim()){
+      const t = searchTerm.toLowerCase();
+      rules = rules.filter(r =>
+        r.title.toLowerCase().includes(t) ||
+        r.rule.toLowerCase().includes(t) ||
+        r.wrong.toLowerCase().includes(t) ||
+        r.right.toLowerCase().includes(t)
+      );
+    }
+    if(rules.length===0) return;
+
+    const head = document.createElement('div');
+    head.className = 'sectionHead';
+    const num = document.createElement('div');
+    num.className = 'num';
+    num.style.background = `var(${sec.color})`;
+    num.textContent = sec.key;
+    head.appendChild(num);
+    const h2 = document.createElement('h2');
+    h2.textContent = sec.name;
+    head.appendChild(h2);
+    const cnt = document.createElement('span');
+    cnt.className = 'count';
+    cnt.textContent = rules.length + ' rule' + (rules.length!==1?'s':'');
+    head.appendChild(cnt);
+    area.appendChild(head);
+
+    const grid = document.createElement('div');
+    grid.className = 'ruleGrid';
+    rules.forEach(r=>{
+      const card = document.createElement('div');
+      card.className = 'ruleCard';
+      card.onclick = () => openModal(r.id);
+
+      const stamp = document.createElement('span');
+      stamp.className = 'stamp';
+      stamp.style.color = `var(${sec.color})`;
+      stamp.textContent = r.id;
+      card.appendChild(stamp);
+
+      const arrow = document.createElement('div');
+      arrow.className = 'arrow';
+      arrow.textContent = '↗';
+      card.appendChild(arrow);
+
+      const h3 = document.createElement('h3');
+      h3.textContent = r.title;
+      card.appendChild(h3);
+
+      const snip = document.createElement('div');
+      snip.className = 'snippet';
+      snip.innerHTML = '<span class="x">'+escapeHtml(truncate(r.wrong,58))+'</span><br><span class="ck">'+escapeHtml(truncate(r.right,58))+'</span>';
+      card.appendChild(snip);
+
+      grid.appendChild(card);
+    });
+    area.appendChild(grid);
+  });
+
+  if(area.children.length===0){
+    const empty = document.createElement('div');
+    empty.style.cssText = 'padding:60px 20px;text-align:center;color:var(--ink-soft);';
+    empty.textContent = 'No rules match your search.';
+    area.appendChild(empty);
+  }
+}
+
+function truncate(s,n){ return s.length>n ? s.slice(0,n-1)+'…' : s; }
+function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ---- Modal detail with mini quiz ---- */
+function openModal(ruleId){
+  const r = RULES.find(x=>x.id===ruleId);
+  const sec = secInfo(r.sec);
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay';
+  overlay.onclick = e => { if(e.target===overlay) overlay.remove(); };
+
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+
+  modal.innerHTML = `
+    <button class="closeBtn" aria-label="Close">✕</button>
+    <div class="modalStamp" style="color:var(${sec.color})">${r.id} — ${sec.name}</div>
+    <h2>${r.title}</h2>
+    <div class="exBlock">
+      <div class="exRow wrong"><span class="tag">✕</span><span>${escapeHtml(r.wrong)}</span></div>
+      <div class="exRow right"><span class="tag">✓</span><span>${escapeHtml(r.right)}</span></div>
+    </div>
+    <div class="explainBox">${r.rule}</div>
+    <div class="quizBox">
+      <div class="qLabel">Try it</div>
+      <div class="qSentence">${r.q}</div>
+      <div class="choiceRow" id="modalChoices"></div>
+      <div class="quizWhy" id="modalWhy">${r.why}</div>
+    </div>
+  `;
+
+  modal.querySelector('.closeBtn').onclick = () => overlay.remove();
+
+  const choiceRow = modal.querySelector('#modalChoices');
+  const whyBox = modal.querySelector('#modalWhy');
+  r.choices.forEach((c,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'choiceBtn';
+    btn.innerHTML = c;
+    btn.onclick = () => {
+      [...choiceRow.children].forEach(b=>b.disabled=true);
+      if(i===r.answer){ btn.classList.add('correct'); }
+      else{
+        btn.classList.add('incorrect');
+        choiceRow.children[r.answer].classList.add('correct');
+      }
+      whyBox.classList.add('show');
+    };
+    choiceRow.appendChild(btn);
+  });
+
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+}
+
+/* =========================================================
+   STUDY MODE — Leitner-style spaced repetition
+========================================================= */
+function buildQueue(){
+  const now = Date.now();
+  studyQueue = RULES
+    .filter(r => progress[r.id].due <= now)
+    .sort((a,b)=> progress[a.id].due - progress[b.id].due)
+    .map(r=>r.id);
+  currentCardId = studyQueue.length ? studyQueue[0] : null;
+  cardAnswered = false;
+  cardCorrect = false;
+}
+
+function renderStudy(){
+  const wrap = document.createElement('div');
+  wrap.className = 'studyWrap';
+
+  // stats
+  const total = RULES.length;
+  const dueNow = RULES.filter(r=>progress[r.id].due<=Date.now()).length;
+  const mastered = RULES.filter(r=>progress[r.id].box>=5).length;
+  const learning = RULES.filter(r=>progress[r.id].seen && progress[r.id].box<5).length;
+
+  const statBar = document.createElement('div');
+  statBar.className = 'statBar';
+  statBar.innerHTML = `
+    <div class="statPill"><span class="n">${total}</span><span class="l">Total rules</span></div>
+    <div class="statPill"><span class="n">${dueNow}</span><span class="l">Due now</span></div>
+    <div class="statPill"><span class="n">${learning}</span><span class="l">Learning</span></div>
+    <div class="statPill"><span class="n" style="color:var(--green)">${mastered}</span><span class="l">Mastered</span></div>
+  `;
+  wrap.appendChild(statBar);
+
+  const progressPct = Math.round((mastered/total)*100);
+  const track = document.createElement('div');
+  track.className = 'progressTrack';
+  track.innerHTML = `<div class="progressFill" style="width:${progressPct}%"></div>`;
+  wrap.appendChild(track);
+
+  const banner = document.createElement('div');
+  banner.className = 'noteBanner';
+  banner.innerHTML = `<b>How this works:</b> Answer each card, then rate how well you knew it — Again, Hard, Good, or Easy — just like Anki. Easier ratings push a rule further out before it returns; missing it brings it right back. Progress lives in this browser tab only, so use <b>Export</b> below to save it and <b>Import</b> to pick up later.`;
+  wrap.appendChild(banner);
+
+  if(!currentCardId){
+    const done = document.createElement('div');
+    done.className = 'doneCard';
+    done.innerHTML = `
+      <h2>${dueNow===0 && studyQueue.length===0 ? "You're all caught up 🎉" : "Nothing due right now"}</h2>
+      <p>${mastered===total ? 'Every rule has reached the mastered box.' : 'Come back later, or review everything again right now regardless of schedule.'}</p>
+      <div class="toolsRow">
+        <button class="primaryBtn" id="reviewAllBtn">Review all 50 now</button>
+        <button class="ghostBtn" id="exportBtn2">Export progress</button>
+        <button class="ghostBtn" id="importBtn2">Import progress</button>
+        <input type="file" id="fileInput2" accept="application/json">
+      </div>
+    `;
+    wrap.appendChild(done);
+    app.appendChild(wrap);
+    done.querySelector('#reviewAllBtn').onclick = () => {
+      studyQueue = RULES.map(r=>r.id);
+      currentCardId = studyQueue[0];
+      cardAnswered=false; cardCorrect=false;
+      render();
+    };
+    done.querySelector('#exportBtn2').onclick = exportProgress;
+    done.querySelector('#importBtn2').onclick = () => done.querySelector('#fileInput2').click();
+    done.querySelector('#fileInput2').onchange = importProgress;
+    return;
+  }
+
+  const r = RULES.find(x=>x.id===currentCardId);
+  const sec = secInfo(r.sec);
+  const p = progress[r.id];
+
+  const card = document.createElement('div');
+  card.className = 'card3d';
+
+  const stampWrap = document.createElement('div');
+  stampWrap.className = 'stamp';
+  stampWrap.style.cssText = `color:var(${sec.color}); border:1.3px solid currentColor; border-radius:999px; padding:3px 10px; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:11px;`;
+  stampWrap.textContent = `${r.id} · ${sec.name} · box ${p.box}/6`;
+  card.appendChild(stampWrap);
+
+  const front = document.createElement('div');
+  front.className = 'cardFront';
+  front.innerHTML = r.q;
+  card.appendChild(front);
+
+  const choices = document.createElement('div');
+  choices.className = 'cardChoices';
+  card.appendChild(choices);
+
+  const reveal = document.createElement('div');
+  reveal.className = 'revealBox';
+  reveal.style.display = 'none';
+  reveal.innerHTML = `<div class="ruleLine"><b>${r.title}.</b> ${r.rule}</div><div class="rateRow" id="rateRow"></div>`;
+  card.appendChild(reveal);
+
+  r.choices.forEach((c,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'cardChoiceBtn';
+    btn.innerHTML = c;
+    btn.onclick = () => {
+      if(cardAnswered) return;
+      cardAnswered = true;
+      cardCorrect = (i===r.answer);
+      [...choices.children].forEach(b=>b.disabled=true);
+      if(i===r.answer) btn.classList.add('correct');
+      else{
+        btn.classList.add('incorrect');
+        choices.children[r.answer].classList.add('correct');
+      }
+      reveal.style.display = 'block';
+      buildRateButtons();
+    };
+    choices.appendChild(btn);
+  });
+
+  function buildRateButtons(){
+    const rateRow = reveal.querySelector('#rateRow');
+    rateRow.innerHTML = '';
+    const opts = [
+      {label:'Again', cls:'again', delta:'box → 0', fn:()=>rate(0)},
+      {label:'Hard', cls:'hard', delta:'box stays', fn:()=>rate(Math.max(p.box-0,p.box))},
+      {label:'Good', cls:'good', delta:'box +1', fn:()=>rate(Math.min(p.box+1,6))},
+      {label:'Easy', cls:'easy', delta:'box +2', fn:()=>rate(Math.min(p.box+2,6))},
+    ];
+    // If they got it wrong on the first try, nudge them toward "Again"/"Hard"
+    opts.forEach(o=>{
+      const b = document.createElement('button');
+      b.className = 'rateBtn ' + o.cls;
+      b.innerHTML = o.label + '<span class="sub">'+o.delta+'</span>';
+      b.onclick = o.fn;
+      rateRow.appendChild(b);
+    });
+  }
+
+  function rate(newBox){
+    p.box = newBox;
+    p.seen = true;
+    const days = BOX_INTERVALS_DAYS[newBox] ?? 90;
+    p.due = Date.now() + days*24*60*60*1000 + (days===0 ? 1000*30 : 0);
+    // advance queue
+    studyQueue.shift();
+    currentCardId = studyQueue.length ? studyQueue[0] : null;
+    cardAnswered = false; cardCorrect = false;
+    render();
+  }
+
+  wrap.appendChild(card);
+
+  const legend = document.createElement('div');
+  legend.className = 'boxLegend';
+  legend.innerHTML = `
+    <span><i style="background:#A6362B"></i>Again = review almost immediately</span>
+    <span><i style="background:#B5651D"></i>Hard = same box</span>
+    <span><i style="background:#2F6E4F"></i>Good = next box (${BOX_INTERVALS_DAYS.slice(1).join('d, ')}d…)</span>
+    <span><i style="background:#2A6E7F"></i>Easy = skip a box</span>
+  `;
+  wrap.appendChild(legend);
+
+  const toolsRow = document.createElement('div');
+  toolsRow.className = 'toolsRow';
+  toolsRow.innerHTML = `
+    <button class="ghostBtn" id="exportBtn">Export progress</button>
+    <button class="ghostBtn" id="importBtn">Import progress</button>
+    <input type="file" id="fileInput" accept="application/json">
+  `;
+  wrap.appendChild(toolsRow);
+  app.appendChild(wrap);
+
+  document.getElementById('exportBtn').onclick = exportProgress;
+  document.getElementById('importBtn').onclick = () => document.getElementById('fileInput').click();
+  document.getElementById('fileInput').onchange = importProgress;
+}
+
+function exportProgress(){
+  const data = JSON.stringify({exportedAt:new Date().toISOString(), progress}, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'grammar-focus-progress.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grammar Focus — The Copyeditor's Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F7F3EA;
+    --paper-dim:#EFE9DA;
+    --card:#FFFDF8;
+    --ink:#21252B;
+    --ink-soft:#4B5158;
+    --rule-line:#DBD3BE;
+    --red:#B23A2E;
+    --red-soft:#E7C9C4;
+    --green:#2F6E4F;
+    --green-soft:#CFE0D3;
+    --gold:#A67C3D;
+
+    --secA:#3B6E8F; --secA-soft:#D9E4EC;
+    --secB:#2F6E4F; --secB-soft:#D9E9DF;
+    --secC:#6B4C7A; --secC-soft:#E5DBEA;
+    --secD:#2A7F7F; --secD-soft:#D6EAEA;
+    --secE:#B5651D; --secE-soft:#F1DFC9;
+    --secF:#8A6D3B; --secF-soft:#EAE0CB;
+    --secG:#7A4B4B; --secG-soft:#E9D9D9;
+    --secH:#4B5A6B; --secH-soft:#DDE1E6;
+
+    --radius: 10px;
+    --shadow: 0 1px 2px rgba(33,37,43,0.06), 0 6px 20px -10px rgba(33,37,43,0.18);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.serif{font-family:'Source Serif 4',serif;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  /* subtle paper grain via layered gradients */
+  body::before{
+    content:"";
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(33,37,43,0.015) 0px, rgba(33,37,43,0.015) 1px, transparent 1px, transparent 3px);
+    opacity:.5;
+  }
+
+  a{color:inherit;}
+
+  /* ===== Top bar ===== */
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    background:var(--paper);
+    border-bottom:1px solid var(--rule-line);
+  }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto; padding:14px 24px;
+    display:flex; align-items:center; gap:18px; justify-content:space-between;
+  }
+  .brand{display:flex; align-items:baseline; gap:10px;}
+  .brand .mark{
+    width:34px;height:34px;border-radius:50%;
+    border:1.5px solid var(--red);
+    color:var(--red);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:12px;
+    transform:rotate(-8deg);
+    flex:none;
+  }
+  .brand h1{font-size:19px; margin:0; font-weight:600; letter-spacing:.2px;}
+  .brand .sub{font-size:12px; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace;}
+
+  .modeSwitch{
+    display:flex; background:var(--paper-dim); border-radius:999px; padding:3px;
+    border:1px solid var(--rule-line);
+  }
+  .modeSwitch button{
+    border:none; background:transparent; padding:8px 16px; border-radius:999px;
+    font-family:'Inter',sans-serif; font-weight:600; font-size:13px; cursor:pointer;
+    color:var(--ink-soft);
+  }
+  .modeSwitch button.active{background:var(--ink); color:var(--paper);}
+
+  .container{max-width:1180px; margin:0 auto; padding:28px 24px 80px; position:relative; z-index:1;}
+
+  /* ===== Browse layout ===== */
+  .browseGrid{display:grid; grid-template-columns:230px 1fr; gap:28px; align-items:start;}
+  @media (max-width:860px){ .browseGrid{grid-template-columns:1fr;} }
+
+  .toc{position:sticky; top:78px;}
+  .toc-title{font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-soft); margin:0 0 10px 4px; font-weight:600;}
+  .toc-item{
+    display:flex; align-items:center; gap:10px;
+    padding:8px 10px; border-radius:8px; cursor:pointer;
+    font-size:13.5px; margin-bottom:2px; color:var(--ink-soft); font-weight:500;
+  }
+  .toc-item:hover{background:var(--paper-dim);}
+  .toc-item.active{background:var(--card); box-shadow:var(--shadow); color:var(--ink);}
+  .toc-dot{width:9px;height:9px;border-radius:50%; flex:none;}
+  .toc-count{margin-left:auto; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-soft); opacity:.7;}
+
+  .search{
+    width:100%; padding:10px 12px; border:1px solid var(--rule-line); border-radius:8px;
+    background:var(--card); font-family:'Inter',sans-serif; font-size:13.5px; margin-bottom:16px;
+    color:var(--ink);
+  }
+  .search:focus{outline:2px solid var(--gold); outline-offset:1px;}
+
+  .sectionHead{
+    display:flex; align-items:baseline; gap:12px; margin:36px 0 16px;
+  }
+  .sectionHead:first-child{margin-top:0;}
+  .sectionHead .num{
+    font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600;
+    width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    color:#fff; flex:none;
+  }
+  .sectionHead h2{font-size:22px; margin:0; font-weight:600;}
+  .sectionHead .count{font-size:12px; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace;}
+
+  .ruleGrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px;}
+
+  .ruleCard{
+    background:var(--card); border:1px solid var(--rule-line); border-radius:var(--radius);
+    padding:16px 16px 14px; box-shadow:var(--shadow); cursor:pointer;
+    transition:transform .12s ease, box-shadow .12s ease;
+    position:relative;
+  }
+  .ruleCard:hover{transform:translateY(-2px); box-shadow:0 2px 4px rgba(33,37,43,.08), 0 14px 26px -12px rgba(33,37,43,.28);}
+  .ruleCard .stamp{
+    display:inline-flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:11px;
+    padding:3px 8px; border-radius:999px; margin-bottom:10px;
+    border:1.3px solid currentColor;
+  }
+  .ruleCard h3{font-size:16px; margin:0 0 10px; line-height:1.3; font-weight:600;}
+  .ruleCard .snippet{font-size:12.5px; color:var(--ink-soft); line-height:1.55;}
+  .ruleCard .snippet .x{color:var(--red); text-decoration:line-through; text-decoration-thickness:1.5px;}
+  .ruleCard .snippet .ck{color:var(--green); font-weight:600;}
+  .ruleCard .arrow{position:absolute; top:14px; right:14px; color:var(--ink-soft); opacity:.4; font-size:13px;}
+
+  /* ===== Modal detail ===== */
+  .overlay{
+    position:fixed; inset:0; background:rgba(33,37,43,.45); z-index:100;
+    display:flex; align-items:flex-start; justify-content:center; padding:48px 18px;
+    overflow:auto;
+  }
+  .modal{
+    background:var(--card); max-width:640px; width:100%; border-radius:14px;
+    box-shadow:0 20px 60px -12px rgba(0,0,0,.4); padding:30px 30px 26px; position:relative;
+  }
+  .modal .closeBtn{
+    position:absolute; top:16px; right:16px; border:none; background:var(--paper-dim);
+    width:30px;height:30px;border-radius:50%; cursor:pointer; font-size:15px; color:var(--ink-soft);
+  }
+  .modal .modalStamp{
+    display:inline-flex; align-items:center; gap:8px; font-family:'IBM Plex Mono',monospace;
+    font-weight:600; font-size:12px; padding:4px 10px; border-radius:999px; border:1.4px solid currentColor; margin-bottom:14px;
+  }
+  .modal h2{font-size:23px; margin:0 0 16px; font-weight:600;}
+  .exBlock{border:1px solid var(--rule-line); border-radius:10px; overflow:hidden; margin-bottom:16px;}
+  .exRow{padding:12px 16px; font-size:14.5px; line-height:1.5; display:flex; gap:10px;}
+  .exRow.wrong{background:#FBF2F0; color:#7a2b22;}
+  .exRow.right{background:#F0F6F2; color:#20492f;}
+  .exRow .tag{font-family:'IBM Plex Mono',monospace; font-size:10.5px; font-weight:700; flex:none; padding-top:2px;}
+  .exRow.wrong .tag{color:var(--red);}
+  .exRow.right .tag{color:var(--green);}
+  .explainBox{
+    font-size:14px; line-height:1.6; color:var(--ink); background:var(--paper-dim);
+    border-radius:10px; padding:14px 16px; margin-bottom:18px;
+  }
+  .explainBox b{color:var(--ink);}
+
+  .quizBox{border-top:1px dashed var(--rule-line); padding-top:18px;}
+  .quizBox .qLabel{font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-soft); font-weight:700; margin-bottom:8px;}
+  .quizBox .qSentence{font-size:15px; margin-bottom:12px; font-family:'Source Serif 4',serif;}
+  .choiceRow{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;}
+  .choiceBtn{
+    padding:9px 16px; border-radius:8px; border:1.5px solid var(--rule-line); background:var(--card);
+    font-family:'Inter',sans-serif; font-size:13.5px; font-weight:600; cursor:pointer; color:var(--ink);
+  }
+  .choiceBtn:hover{border-color:var(--gold);}
+  .choiceBtn.correct{background:var(--green-soft); border-color:var(--green); color:#1c3d29;}
+  .choiceBtn.incorrect{background:var(--red-soft); border-color:var(--red); color:#6b241b;}
+  .quizWhy{font-size:13px; color:var(--ink-soft); background:var(--paper-dim); padding:10px 13px; border-radius:8px; margin-top:6px; display:none;}
+  .quizWhy.show{display:block;}
+
+  /* ===== Study mode ===== */
+  .studyWrap{max-width:640px; margin:0 auto;}
+  .statBar{display:flex; gap:10px; margin-bottom:22px; flex-wrap:wrap;}
+  .statPill{
+    flex:1; min-width:110px; background:var(--card); border:1px solid var(--rule-line); border-radius:10px;
+    padding:12px 14px; text-align:center; box-shadow:var(--shadow);
+  }
+  .statPill .n{font-family:'IBM Plex Mono',monospace; font-size:20px; font-weight:600; display:block;}
+  .statPill .l{font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); font-weight:600;}
+
+  .card3d{
+    background:var(--card); border:1px solid var(--rule-line); border-radius:16px;
+    box-shadow:0 2px 4px rgba(33,37,43,.06), 0 24px 50px -20px rgba(33,37,43,.35);
+    padding:34px 32px; min-height:280px; display:flex; flex-direction:column;
+  }
+  .card3d .stamp{align-self:flex-start;}
+  .cardFront{font-family:'Source Serif 4',serif; font-size:19px; line-height:1.55; margin:18px 0 22px;}
+  .cardFront .blank{
+    display:inline-block; border-bottom:2px solid var(--gold); min-width:70px; text-align:center; font-weight:600;
+  }
+  .cardChoices{display:flex; gap:12px; margin-top:auto; flex-wrap:wrap;}
+  .cardChoiceBtn{
+    flex:1; min-width:140px; padding:14px 16px; border-radius:10px; border:1.6px solid var(--rule-line);
+    background:var(--paper-dim); font-family:'Inter',sans-serif; font-weight:600; font-size:14.5px; cursor:pointer; color:var(--ink);
+  }
+  .cardChoiceBtn:hover{border-color:var(--gold);}
+  .cardChoiceBtn.correct{background:var(--green-soft); border-color:var(--green); color:#1c3d29;}
+  .cardChoiceBtn.incorrect{background:var(--red-soft); border-color:var(--red); color:#6b241b;}
+
+  .revealBox{margin-top:20px; border-top:1px dashed var(--rule-line); padding-top:18px;}
+  .revealBox .ruleLine{font-size:14px; line-height:1.6; color:var(--ink); margin-bottom:14px;}
+  .rateRow{display:flex; gap:8px; flex-wrap:wrap;}
+  .rateBtn{
+    flex:1; min-width:110px; padding:11px 10px; border-radius:9px; border:none; cursor:pointer;
+    font-family:'Inter',sans-serif; font-weight:700; font-size:12.5px; color:#fff;
+  }
+  .rateBtn.again{background:#A6362B;}
+  .rateBtn.hard{background:#B5651D;}
+  .rateBtn.good{background:#2F6E4F;}
+  .rateBtn.easy{background:#2A6E7F;}
+  .rateBtn .sub{display:block; font-weight:500; opacity:.85; font-size:10.5px; margin-top:2px; font-family:'IBM Plex Mono',monospace;}
+
+  .doneCard{
+    text-align:center; padding:60px 30px; background:var(--card); border:1px solid var(--rule-line);
+    border-radius:16px; box-shadow:var(--shadow);
+  }
+  .doneCard h2{font-size:22px; margin:0 0 8px;}
+  .doneCard p{color:var(--ink-soft); font-size:14px; margin:0 0 20px;}
+
+  .ghostBtn{
+    display:inline-block; padding:10px 18px; border-radius:8px; border:1.5px solid var(--ink);
+    background:transparent; font-weight:600; font-size:13.5px; cursor:pointer; color:var(--ink);
+    font-family:'Inter',sans-serif;
+  }
+  .ghostBtn:hover{background:var(--ink); color:var(--paper);}
+  .primaryBtn{
+    display:inline-block; padding:10px 18px; border-radius:8px; border:none;
+    background:var(--ink); color:var(--paper); font-weight:600; font-size:13.5px; cursor:pointer;
+    font-family:'Inter',sans-serif;
+  }
+
+  .toolsRow{display:flex; gap:10px; justify-content:center; margin-top:14px; flex-wrap:wrap;}
+
+  .progressTrack{height:6px; background:var(--rule-line); border-radius:99px; overflow:hidden; margin-bottom:22px;}
+  .progressFill{height:100%; background:var(--gold); transition:width .2s ease;}
+
+  .noteBanner{
+    font-size:12.5px; color:var(--ink-soft); background:var(--paper-dim); border:1px solid var(--rule-line);
+    border-radius:8px; padding:10px 14px; margin-bottom:22px; line-height:1.5;
+  }
+  .noteBanner b{color:var(--ink);}
+
+  .boxLegend{display:flex; gap:14px; flex-wrap:wrap; font-size:11.5px; color:var(--ink-soft); margin-top:6px; justify-content:center;}
+  .boxLegend span{display:flex; align-items:center; gap:5px;}
+  .boxLegend i{width:9px;height:9px;border-radius:50%; display:inline-block;}
+
+  footer{text-align:center; padding:36px 20px 60px; font-size:12px; color:var(--ink-soft);}
+  input[type=file]{display:none;}
+  ::selection{background:#E7C9C4;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="mark">GF</div>
+      <div>
+        <h1>Grammar Focus</h1>
+        <div class="sub">50 rules · the copyeditor's desk</div>
+      </div>
+    </div>
+    <div class="modeSwitch">
+      <button id="btnBrowse" class="active">Browse</button>
+      <button id="btnStudy">Study</button>
+    </div>
+  </div>
+</div>
+
+<div class="container" id="app"></div>
+
+<footer>Adapted for personal study &mdash; original 50-rule framework by Helen Mathur, majortests.com.</footer>
+
+<script>
+/* =========================================================
+   DATA — 50 rules, 8 sections
+========================================================= */
+const SECTIONS = [
+  {key:'A', name:'Pronouns', color:'--secA', soft:'--secA-soft'},
+  {key:'B', name:'Verb agreement', color:'--secB', soft:'--secB-soft'},
+  {key:'C', name:'Verb tense, voice & mood', color:'--secC', soft:'--secC-soft'},
+  {key:'D', name:'Parallelism', color:'--secD', soft:'--secD-soft'},
+  {key:'E', name:'Dangling & misplaced modifiers', color:'--secE', soft:'--secE-soft'},
+  {key:'F', name:'Idiom & diction', color:'--secF', soft:'--secF-soft'},
+  {key:'G', name:'Punctuation', color:'--secG', soft:'--secG-soft'},
+  {key:'H', name:'Miscellaneous', color:'--secH', soft:'--secH-soft'},
+];
+
+const RULES = [
+{id:'A01',sec:'A',title:'Compound subjects',
+ rule:"When a pronoun is part of a compound subject joined by <b>and</b>, use the subject form (I, he, she, we, they, who).",
+ wrong:"My cousin and me are driving to the coast tomorrow.",
+ right:"My cousin and I are driving to the coast tomorrow.",
+ q:"Choose the correct pronoun: <em>Marcus and ___ finished the project early.</em>",
+ choices:["me","I"], answer:1,
+ why:"Test the pronoun alone: “I finished the project early” sounds right, so <b>I</b> is correct."},
+
+{id:'A02',sec:'A',title:'Compound objects',
+ rule:"When a pronoun is part of a compound object joined by <b>and</b>, use the object form (me, him, her, us, them, whom).",
+ wrong:"The coach praised Diego and I after the match.",
+ right:"The coach praised Diego and me after the match.",
+ q:"Choose the correct pronoun: <em>The teacher handed the awards to Priya and ___.</em>",
+ choices:["I","me"], answer:1,
+ why:"Isolate it: “handed the awards to me” — the object form is needed."},
+
+{id:'A03',sec:'A',title:'Pronoun predicates',
+ rule:"After a form of <b>to be</b> (am, is, are, was, were, will be), use the subject form of a pronoun — the verb doesn't take an object.",
+ wrong:"The one who called was her.",
+ right:"The one who called was she.",
+ q:"Choose correctly: <em>It could have been ___ who left the note.</em>",
+ choices:["him","he"], answer:1,
+ why:"Reverse it: “He was it” sounds fine; “Him was it” doesn't."},
+
+{id:'A04',sec:'A',title:'Pronouns in apposition',
+ rule:"A pronoun that renames a noun, set off by commas, takes the same case as that noun.",
+ wrong:"The manager promoted two employees, Sara and I.",
+ right:"The manager promoted two employees, Sara and me.",
+ q:"Choose correctly: <em>The prize went to the finalists, Omar and ___.</em>",
+ choices:["I","me"], answer:1,
+ why:"“The prize went to me” confirms the object case."},
+
+{id:'A05',sec:'A',title:'Pronoun–noun pairs',
+ rule:"In phrases like “we runners” or “us fans,” ignore the noun and test the pronoun on its own.",
+ wrong:"Us volunteers arrived early to set up chairs.",
+ right:"We volunteers arrived early to set up chairs.",
+ q:"Choose correctly: <em>The director thanked ___ interns for staying late.</em>",
+ choices:["we","us"], answer:1,
+ why:"“Thanked us” — drop the noun “interns” to hear the object case clearly."},
+
+{id:'A06',sec:'A',title:'Pronouns in comparisons',
+ rule:"After <b>than</b> or <b>as</b> in a comparison, mentally supply the missing verb to find the correct case.",
+ wrong:"My sister types faster than me.",
+ right:"My sister types faster than I.",
+ q:"Choose correctly: <em>He has read more novels than ___.</em>",
+ choices:["her","she"], answer:1,
+ why:"Complete it silently: “more novels than she (has read).”"},
+
+{id:'A07',sec:'A',title:'Pronouns after prepositions',
+ rule:"Pronouns following a preposition (to, for, with, between, except…) take the object form.",
+ wrong:"Keep this secret between you and I.",
+ right:"Keep this secret between you and me.",
+ q:"Choose correctly: <em>Everyone except ___ arrived on time.</em>",
+ choices:["he","him"], answer:1,
+ why:"“Except” is a preposition, so it takes the object form."},
+
+{id:'A08',sec:'A',title:'Who and whom',
+ rule:"Use <b>who / whoever</b> for the subject of a clause, and <b>whom / whomever</b> for the object — test by isolating and rewording the clause.",
+ wrong:"Give the tickets to whomever arrives first.",
+ right:"Give the tickets to whoever arrives first.",
+ q:"Choose correctly: <em>___ did you invite to the ceremony?</em>",
+ choices:["Who","Whom"], answer:1,
+ why:"Reword it: “you invited whom” — the object of “invited.”"},
+
+{id:'A09',sec:'A',title:'Pronouns and gerunds',
+ rule:"A pronoun that sits directly before a gerund (an <em>-ing</em> word used as a noun) should be possessive.",
+ wrong:"I was surprised by him quitting so suddenly.",
+ right:"I was surprised by his quitting so suddenly.",
+ q:"Choose correctly: <em>Nobody minds ___ arriving late, since traffic was terrible.</em>",
+ choices:["them","their"], answer:1,
+ why:"“Their arriving” — the gerund needs a possessive pronoun in front of it."},
+
+{id:'A10',sec:'A',title:'Possessive pronouns & adjectives',
+ rule:"Possessive pronouns and adjectives (its, whose, yours, ours, theirs) never take an apostrophe.",
+ wrong:"The company changed it's logo last year.",
+ right:"The company changed its logo last year.",
+ q:"Choose correctly: <em>___ turn is it to present next?</em>",
+ choices:["Who's","Whose"], answer:1,
+ why:"“Whose” is possessive; “who's” means “who is.”"},
+
+{id:'B01',sec:'B',title:'Verb–subject agreement',
+ rule:"A verb must agree with its true subject, even when a phrase (with, along with, as well as, together with…) comes between them.",
+ wrong:"The playlist, along with several podcasts, were downloaded overnight.",
+ right:"The playlist, along with several podcasts, was downloaded overnight.",
+ q:"Choose correctly: <em>The recipe, together with all the ingredients, ___ ready on the counter.</em>",
+ choices:["is","are"], answer:0,
+ why:"“The recipe… is ready” — ignore the “together with” phrase."},
+
+{id:'B02',sec:'B',title:"Compound subjects linked by 'and'",
+ rule:"Two singular subjects joined by <b>and</b> form a compound subject and need a plural verb.",
+ wrong:"The printer and the scanner needs to be replaced.",
+ right:"The printer and the scanner need to be replaced.",
+ q:"Choose correctly: <em>A violinist and a cellist ___ performing tonight.</em>",
+ choices:["is","are"], answer:1,
+ why:"Two items joined by “and” form a plural subject."},
+
+{id:'B03',sec:'B',title:'Subject placed after the verb',
+ rule:"When word order is inverted (the subject follows the verb), the verb still must agree with the real subject.",
+ wrong:"There was a laptop and two chargers left on the desk.",
+ right:"There were a laptop and two chargers left on the desk.",
+ q:"Choose correctly: <em>___ the students and the teacher ready to begin?</em>",
+ choices:["Is","Are"], answer:1,
+ why:"Ask “who is ready?” — the students and the teacher, a plural subject."},
+
+{id:'B04',sec:'B',title:'Either and neither',
+ rule:"<b>Either</b> and <b>neither</b>, used alone (without or/nor), are singular.",
+ wrong:"Neither of the applicants have the required certification.",
+ right:"Neither of the applicants has the required certification.",
+ q:"Choose correctly: <em>Either of the routes ___ longer than expected.</em>",
+ choices:["seem","seems"], answer:1,
+ why:"“Either” is singular — ignore “of the routes.”"},
+
+{id:'B05',sec:'B',title:'Neither…nor and either…or',
+ rule:"In <b>neither…nor</b> / <b>either…or</b> constructions, the verb agrees with the closer subject.",
+ wrong:"Neither the manager nor the employees was informed.",
+ right:"Neither the manager nor the employees were informed.",
+ q:"Choose correctly: <em>Either the students or the teacher ___ responsible for locking up.</em>",
+ choices:["is","are"], answer:0,
+ why:"The verb matches the nearer subject, “the teacher” (singular)."},
+
+{id:'B06',sec:'B',title:'Singular indefinite pronouns',
+ rule:"Words like someone, everybody, each, either, neither, nobody, no one, and “none” take a singular verb.",
+ wrong:"Everybody on the two teams want to win.",
+ right:"Everybody on the two teams wants to win.",
+ q:"Choose correctly: <em>None of the boxes ___ been opened yet.</em>",
+ choices:["has","have"], answer:0,
+ why:"Treat “none” as singular; ignore “of the boxes.”"},
+
+{id:'B07',sec:'B',title:'Latin and Greek plurals',
+ rule:"Data, criteria, phenomena, and media are plural; datum, criterion, phenomenon, and medium are their singular forms.",
+ wrong:"The criteria for admission is unclear.",
+ right:"The criteria for admission are unclear.",
+ q:"Choose correctly: <em>This unusual phenomenon ___ never been explained.</em>",
+ choices:["has","have"], answer:0,
+ why:"“Phenomenon” is singular, so it takes “has.”"},
+
+{id:'B08',sec:'B',title:'Collective nouns',
+ rule:"Collective nouns (team, jury, committee, orchestra) usually take a singular verb, since the group acts as one unit.",
+ wrong:"The committee are meeting on Thursday.",
+ right:"The committee is meeting on Thursday.",
+ q:"Choose correctly: <em>The band ___ releasing a new album next month.</em>",
+ choices:["is","are"], answer:0,
+ why:"Treat the collective noun “band” as a single unit."},
+
+{id:'B09',sec:'B',title:'A number of / the number of',
+ rule:"“A number of” takes a plural verb; “the number of” takes a singular verb.",
+ wrong:"The number of complaints have increased this quarter.",
+ right:"The number of complaints has increased this quarter.",
+ q:"Choose correctly: <em>A number of applicants ___ withdrawn from consideration.</em>",
+ choices:["has","have"], answer:1,
+ why:"“A number of” behaves as a plural."},
+
+{id:'C01',sec:'C',title:'Past perfect tense',
+ rule:"Use the simple past for a single past event; use the past perfect (had + past participle) for an earlier event relative to another past event.",
+ wrong:"By the time she called, I already left the office.",
+ right:"By the time she called, I had already left the office.",
+ q:"Choose correctly: <em>He realized he ___ his passport at home.</em>",
+ choices:["forgot","had forgotten"], answer:1,
+ why:"Forgetting happened before realizing, so use the past perfect."},
+
+{id:'C02',sec:'C',title:'Present perfect tense',
+ rule:"Use the present perfect (has/have + past participle) for actions that began in the past and continue, or just finished — especially with “since.”",
+ wrong:"She works at that firm since 2019.",
+ right:"She has worked at that firm since 2019.",
+ q:"Choose correctly: <em>They ___ in this apartment for six years.</em>",
+ choices:["lived","have lived"], answer:1,
+ why:"The action continues into the present, so use the present perfect."},
+
+{id:'C03',sec:'C',title:'Future perfect tense',
+ rule:"Use the future perfect (will have + past participle) for a future action that will finish before another future point.",
+ wrong:"By next June, she will finish her degree.",
+ right:"By next June, she will have finished her degree.",
+ q:"Choose correctly: <em>By the time you arrive, we ___ dinner.</em>",
+ choices:["will finish","will have finished"], answer:1,
+ why:"Dinner finishes before your arrival, so use the future perfect."},
+
+{id:'C04',sec:'C',title:'General statements in the present',
+ rule:"Use the present tense for facts that are still true, for published works still in existence, and for general observations — even if the reporting verb is past.",
+ wrong:"The report noted that the bridge was over 100 years old.",
+ right:"The report noted that the bridge is over 100 years old.",
+ q:"Choose correctly: <em>In his novel, the author ___ that memory is unreliable.</em>",
+ choices:["argued","argues"], answer:1,
+ why:"A published work still exists, so describe its content in the present tense."},
+
+{id:'C05',sec:'C',title:'Future and conditional tenses',
+ rule:"Don't follow a past-tense reporting verb with “will” (use “would”), and don't follow a present-tense reporting verb with “would” (use “will”).",
+ wrong:"She promised that she will call tonight.",
+ right:"She promised that she would call tonight.",
+ q:"Choose correctly: <em>The forecast states that it ___ rain tomorrow.</em>",
+ choices:["would","will"], answer:1,
+ why:"“States” is present tense, so pair it with “will,” not “would.”"},
+
+{id:'C06',sec:'C',title:"'If' constructions",
+ rule:"Match tenses across if-clauses: present→will, past→would, past perfect→would have, subjunctive→would. Never put “would” inside the if-clause.",
+ wrong:"If I would have known, I would have come earlier.",
+ right:"If I had known, I would have come earlier.",
+ q:"Choose correctly: <em>If she ___ harder, she would pass the exam.</em>",
+ choices:["studied","would study"], answer:0,
+ why:"The if-clause never takes “would” — use the plain past tense."},
+
+{id:'C07',sec:'C',title:'The passive voice',
+ rule:"Prefer the active voice, which names who performs the action, over the passive voice, which can leave it vague.",
+ wrong:"Mistakes were made during the audit.",
+ right:"The accountant made mistakes during the audit.",
+ q:"Which version is more direct?",
+ choices:["The cake was baked by Elena.","Elena baked the cake."], answer:1,
+ why:"The active version states plainly who performed the action."},
+
+{id:'C08',sec:'C',title:'Subjunctive for hypotheticals',
+ rule:"Use <b>were</b> instead of <b>was</b> for hypothetical, contrary-to-fact, or highly unlikely situations.",
+ wrong:"If I was taller, I'd try out for the team.",
+ right:"If I were taller, I'd try out for the team.",
+ q:"Choose correctly: <em>I wish it ___ warmer outside right now.</em>",
+ choices:["was","were"], answer:1,
+ why:"A wish contrary to current fact calls for the subjunctive “were.”"},
+
+{id:'C09',sec:'C',title:'Subjunctive in indirect commands',
+ rule:"After strong recommendations or requirements (“it is essential that,” “the policy requires that”), use the base form of the verb — drop “to.”",
+ wrong:"The board recommended that she accepts the position immediately.",
+ right:"The board recommended that she accept the position immediately.",
+ q:"Choose correctly: <em>The rule requires that every visitor ___ in at the front desk.</em>",
+ choices:["signs","sign"], answer:1,
+ why:"An indirect command after “requires that” takes the subjunctive base form."},
+
+{id:'D01',sec:'D',title:'Lists',
+ rule:"Every item in a list or series should share the same grammatical form.",
+ wrong:"Her hobbies include painting, hiking, and to read.",
+ right:"Her hobbies include painting, hiking, and reading.",
+ q:"Choose the parallel version:",
+ choices:["He likes to swim, biking, and running.","He likes swimming, biking, and running."], answer:1,
+ why:"All three items should share the same -ing form."},
+
+{id:'D02',sec:'D',title:'Paired conjunctions',
+ rule:"With paired conjunctions (both…and, either…or, not only…but also), match the grammatical form on each side.",
+ wrong:"She is both a talented writer and paints well.",
+ right:"She is both a talented writer and a skilled painter.",
+ q:"Choose the correct version:",
+ choices:["He not only missed the meeting but also the deadline.","He missed not only the meeting but also the deadline."], answer:1,
+ why:"“Not only” and “but also” should introduce matching noun phrases."},
+
+{id:'D03',sec:'D',title:'Verb tense & voice continuity',
+ rule:"Keep verb tense and voice consistent within a sentence unless a real shift in time requires otherwise.",
+ wrong:"She cooked dinner, cleaned the kitchen, and is going to bed.",
+ right:"She cooked dinner, cleaned the kitchen, and went to bed.",
+ q:"Choose the correct version:",
+ choices:["He opened the store, restocked the shelves, and greets customers.","He opened the store, restocked the shelves, and greeted customers."], answer:1,
+ why:"All three verbs should stay in the same past tense."},
+
+{id:'D04',sec:'D',title:'Pronoun continuity',
+ rule:"Keep pronoun person and number consistent throughout a sentence — don't drift between “one,” “you,” and “they” without reason.",
+ wrong:"If a student studies hard, you will do well on the exam.",
+ right:"If students study hard, they will do well on the exam.",
+ q:"Choose the consistent version:",
+ choices:["Anyone who finishes early may leave, but you should sign out first.","Anyone who finishes early may leave, but they should sign out first."], answer:1,
+ why:"Stay with the same pronoun as the antecedent “anyone” throughout."},
+
+{id:'E01',sec:'E',title:'Misplaced words',
+ rule:"Place limiting words (only, just, even, nearly, hardly, almost) directly next to the word they modify, to avoid ambiguity.",
+ wrong:"I only ate two slices of pizza at the party.",
+ right:"I ate only two slices of pizza at the party.",
+ q:"Choose the clearer version:",
+ choices:["She almost drove the whole way without stopping.","She drove almost the whole way without stopping."], answer:1,
+ why:"Placing “almost” next to “the whole way” makes clear she nearly completed the drive, rather than nearly not driving at all."},
+
+{id:'E02',sec:'E',title:'Misplaced parts',
+ rule:"Keep a modifying phrase next to the word it describes — misplacing it can distort the meaning of the sentence.",
+ wrong:"We delivered a package to the neighbor wrapped in brown paper.",
+ right:"We delivered a package wrapped in brown paper to the neighbor.",
+ q:"Choose the clearer version:",
+ choices:["She served cookies to the kids on a silver tray.","She served cookies on a silver tray to the kids."], answer:1,
+ why:"“On a silver tray” belongs next to “cookies,” not next to “the kids.”"},
+
+{id:'E03',sec:'E',title:'Dangling modifiers',
+ rule:"An introductory modifying phrase must be immediately followed by the noun it actually describes, or it \"dangles\" and seems to modify the wrong thing.",
+ wrong:"Walking through the museum, the paintings amazed us.",
+ right:"Walking through the museum, we were amazed by the paintings.",
+ q:"Choose the correct version:",
+ choices:["After finishing the marathon, a hot shower felt wonderful.","After finishing the marathon, I found a hot shower wonderful."], answer:1,
+ why:"The shower didn't finish the marathon — the subject “I” must follow the modifier."},
+
+{id:'F01',sec:'F',title:'Idiom',
+ rule:"Certain word–preposition pairings are fixed by convention rather than logic — for instance, “consider” takes no “as,” and “credited with” pairs with a quality.",
+ wrong:"She is considered as one of the best chefs in the city.",
+ right:"She is considered one of the best chefs in the city.",
+ q:"Choose the idiomatic version:",
+ choices:["He was credited with solving the case.","He was credited to solving the case."], answer:0,
+ why:"“Credited with” is the fixed idiomatic pairing for an achievement."},
+
+{id:'F02',sec:'F',title:'Diction',
+ rule:"A diction error means using the wrong word entirely — learn commonly confused pairs like flaunt/flout, affect/effect, and imply/infer.",
+ wrong:"He flaunted the safety regulations and got fined.",
+ right:"He flouted the safety regulations and got fined.",
+ q:"Choose the correct word: <em>The rain will likely ___ the outdoor concert.</em>",
+ choices:["effect","affect"], answer:1,
+ why:"“Affect” is usually the verb meaning “to influence”; “effect” is usually the noun."},
+
+{id:'G01',sec:'G',title:'The semicolon',
+ rule:"Use a semicolon to join two complete, related sentences without a conjunction — a comma alone creates a comma splice.",
+ wrong:"The meeting ran long, everyone left exhausted.",
+ right:"The meeting ran long; everyone left exhausted.",
+ q:"Choose the correct punctuation:",
+ choices:["The bakery closed early, they'd sold out of bread.","The bakery closed early; they'd sold out of bread."], answer:1,
+ why:"Two complete sentences need a semicolon, period, or conjunction — not just a comma."},
+
+{id:'G02',sec:'G',title:'The apostrophe',
+ rule:"Apostrophes show possession (add 's to a noun) or omission (contractions) — they never appear in possessive pronouns like its, whose, yours, theirs.",
+ wrong:"The dog wagged it's tail at it's owner.",
+ right:"The dog wagged its tail at its owner.",
+ q:"Choose the correct version:",
+ choices:["The students handed in their's assignments.","The students handed in their assignments."], answer:1,
+ why:"“Theirs” never takes an apostrophe."},
+
+{id:'G03',sec:'G',title:'The colon',
+ rule:"A colon introduces a list, definition, or quotation, and the words before it should form a complete sentence.",
+ wrong:"We need to buy: milk, eggs, and bread.",
+ right:"We need to buy three items: milk, eggs, and bread.",
+ q:"Choose the correct version:",
+ choices:["She had one goal: to win the championship.","She had one goal, to win: the championship."], answer:0,
+ why:"The colon follows a complete clause and introduces what the goal is."},
+
+{id:'H01',sec:'H',title:'Which and that',
+ rule:"“Which” and “that” should refer to a clear, specific noun that precedes them — not vaguely to an entire idea.",
+ wrong:"He forgot his umbrella, which meant he got soaked.",
+ right:"He forgot his umbrella, a mistake that meant he got soaked.",
+ q:"Choose the clearer version:",
+ choices:["Sales dropped sharply, which alarmed investors.","Sales dropped sharply, a decline that alarmed investors."], answer:1,
+ why:"Replacing the vague “which” with a noun phrase clarifies exactly what alarmed investors."},
+
+{id:'H02',sec:'H',title:"Among/between and one another/each other",
+ rule:"Use “between” and “each other” for exactly two; use “among” and “one another” for more than two.",
+ wrong:"The three roommates split the rent between themselves.",
+ right:"The three roommates split the rent among themselves.",
+ q:"Choose correctly: <em>The two finalists congratulated ___ after the match.</em>",
+ choices:["one another","each other"], answer:1,
+ why:"Only two finalists are involved, so “each other” is correct."},
+
+{id:'H03',sec:'H',title:'Comparative and superlative',
+ rule:"Use comparative forms (-er/more) for two items and superlative forms (-est/most) for three or more; don't add “more” to a word that's already comparative, like “superior.”",
+ wrong:"Of the two candidates, she is the most qualified.",
+ right:"Of the two candidates, she is the more qualified.",
+ q:"Choose correctly: <em>This is the ___ of all five proposals.</em>",
+ choices:["stronger","strongest"], answer:1,
+ why:"With five items being compared, the superlative form is required."},
+
+{id:'H04',sec:'H',title:'Less/fewer and amount/number',
+ rule:"Use “fewer” and “number” for countable items; use “less” and “amount” for uncountable quantities.",
+ wrong:"There are less apples in this basket than in that one.",
+ right:"There are fewer apples in this basket than in that one.",
+ q:"Choose correctly: <em>We should reduce the ___ of sugar in this recipe.</em>",
+ choices:["number","amount"], answer:1,
+ why:"Sugar is uncountable, so “amount” is correct."},
+
+{id:'H05',sec:'H',title:'Other and else',
+ rule:"When comparing something to the rest of its own category, add “other” or “else” so the item isn't excluded from its own group.",
+ wrong:"This laptop is faster than any computer on the market.",
+ right:"This laptop is faster than any other computer on the market.",
+ q:"Choose correctly: <em>She scored higher than anyone ___ in the class.</em>",
+ choices:["else","other"], answer:0,
+ why:"“Anyone else” correctly excludes her only from the comparison, not from the class."},
+
+{id:'H06',sec:'H',title:'Hopefully',
+ rule:"“Hopefully” is an adverb meaning “in a hopeful manner” — in careful writing, avoid using it to mean “I hope.”",
+ wrong:"Hopefully, the flight won't be delayed.",
+ right:"I hope the flight won't be delayed.",
+ q:"Choose the version where “hopefully” is used correctly:",
+ choices:["Hopefully, we'll get good news soon.","She waited hopefully by the phone for good news."], answer:1,
+ why:"In the second sentence, “hopefully” describes how she waited — a true adverb use."},
+
+{id:'H07',sec:'H',title:'Like',
+ rule:"Use “such as” (not “like”) to introduce members of a category, and use “as” (not “like”) before a clause that has its own verb.",
+ wrong:"Cities like Paris and Rome attract millions of tourists, like I said earlier.",
+ right:"Cities such as Paris and Rome attract millions of tourists, as I said earlier.",
+ q:"Choose correctly: <em>He finished the race ___ he promised.</em>",
+ choices:["like","as"], answer:1,
+ why:"“As” introduces a clause with its own subject and verb (“he promised”)."},
+
+{id:'H08',sec:'H',title:'Comparisons',
+ rule:"Comparisons must compare equivalent things (wages to wages, not wages to a person), and must match singular with singular, plural with plural.",
+ wrong:"The salary at this company is lower than a competitor.",
+ right:"The salary at this company is lower than that of a competitor.",
+ q:"Choose correctly: <em>The reviews for this restaurant are better than ___.</em>",
+ choices:["the one downtown","those for the one downtown"], answer:1,
+ why:"“Reviews” (plural) must be compared to other reviews, not to “the one” (a restaurant)."},
+
+{id:'H09',sec:'H',title:'Hardly and scarcely',
+ rule:"“Hardly” and “scarcely” already function as negatives, so don't pair them with another negative word.",
+ wrong:"I couldn't hardly hear the announcement.",
+ right:"I could hardly hear the announcement.",
+ q:"Choose correctly:",
+ choices:["She hadn't scarcely finished when the phone rang.","She had scarcely finished when the phone rang."], answer:1,
+ why:"Avoid the double negative created by “hadn't scarcely.”"},
+
+{id:'H10',sec:'H',title:'Ellipsis',
+ rule:"Don't drop words that are grammatically necessary to complete a sentence, such as a required preposition or part of a verb.",
+ wrong:"He is interested and skilled at chess.",
+ right:"He is interested in and skilled at chess.",
+ q:"Choose the complete version:",
+ choices:["She has always and will always love painting.","She has always loved and will always love painting."], answer:1,
+ why:"The first verb needs its own complete form (“has always loved”), not a shared fragment."},
+];
+
+const secInfo = k => SECTIONS.find(s=>s.key===k);
+
+/* =========================================================
+   STATE
+========================================================= */
+let mode = 'browse';
+let activeSection = null;
+let searchTerm = '';
+
+// Spaced-repetition progress: { [ruleId]: {box:0-6, due: timestamp, seen:bool} }
+const BOX_INTERVALS_DAYS = [0, 1, 3, 7, 16, 35, 90]; // index = box
+let progress = {};
+RULES.forEach(r => progress[r.id] = {box:0, due: Date.now(), seen:false});
+
+let studyQueue = [];
+let currentCardId = null;
+let cardAnswered = false;
+let cardCorrect = false;
+
+const app = document.getElementById('app');
+const btnBrowse = document.getElementById('btnBrowse');
+const btnStudy = document.getElementById('btnStudy');
+
+btnBrowse.onclick = () => { mode='browse'; render(); };
+btnStudy.onclick = () => { mode='study'; buildQueue(); render(); };
+
+/* =========================================================
+   RENDER: ROUTER
+========================================================= */
+function render(){
+  btnBrowse.classList.toggle('active', mode==='browse');
+  btnStudy.classList.toggle('active', mode==='study');
+  app.innerHTML = '';
+  if(mode==='browse') renderBrowse();
+  else renderStudy();
+}
+
+/* =========================================================
+   BROWSE MODE
+========================================================= */
+function renderBrowse(){
+  const grid = document.createElement('div');
+  grid.className = 'browseGrid';
+
+  // TOC
+  const toc = document.createElement('div');
+  toc.className = 'toc';
+  const tocTitle = document.createElement('div');
+  tocTitle.className = 'toc-title';
+  tocTitle.textContent = 'Sections';
+  toc.appendChild(tocTitle);
+
+  const search = document.createElement('input');
+  search.className = 'search';
+  search.placeholder = 'Search rules…';
+  search.value = searchTerm;
+  search.oninput = e => { searchTerm = e.target.value; renderRuleArea(); };
+  toc.appendChild(search);
+
+  const allItem = tocItem('All rules', null, RULES.length);
+  toc.appendChild(allItem);
+  SECTIONS.forEach(s=>{
+    const count = RULES.filter(r=>r.sec===s.key).length;
+    toc.appendChild(tocItem(s.key+' · '+s.name, s.key, count, s));
+  });
+
+  grid.appendChild(toc);
+
+  const ruleArea = document.createElement('div');
+  ruleArea.id = 'ruleArea';
+  grid.appendChild(ruleArea);
+
+  app.appendChild(grid);
+  renderRuleArea();
+
+  function tocItem(label, key, count, sec){
+    const div = document.createElement('div');
+    div.className = 'toc-item' + (activeSection===key ? ' active' : '');
+    const dot = document.createElement('span');
+    dot.className = 'toc-dot';
+    dot.style.background = sec ? `var(${sec.color})` : 'var(--ink)';
+    div.appendChild(dot);
+    const txt = document.createElement('span');
+    txt.textContent = label;
+    div.appendChild(txt);
+    const c = document.createElement('span');
+    c.className = 'toc-count';
+    c.textContent = count;
+    div.appendChild(c);
+    div.onclick = () => { activeSection = key; renderBrowse(); };
+    return div;
+  }
+}
+
+function renderRuleArea(){
+  const area = document.getElementById('ruleArea');
+  area.innerHTML = '';
+  let sectionsToShow = activeSection ? [secInfo(activeSection)] : SECTIONS;
+
+  sectionsToShow.forEach(sec=>{
+    let rules = RULES.filter(r=>r.sec===sec.key);
+    if(searchTerm.trim()){
+      const t = searchTerm.toLowerCase();
+      rules = rules.filter(r =>
+        r.title.toLowerCase().includes(t) ||
+        r.rule.toLowerCase().includes(t) ||
+        r.wrong.toLowerCase().includes(t) ||
+        r.right.toLowerCase().includes(t)
+      );
+    }
+    if(rules.length===0) return;
+
+    const head = document.createElement('div');
+    head.className = 'sectionHead';
+    const num = document.createElement('div');
+    num.className = 'num';
+    num.style.background = `var(${sec.color})`;
+    num.textContent = sec.key;
+    head.appendChild(num);
+    const h2 = document.createElement('h2');
+    h2.textContent = sec.name;
+    head.appendChild(h2);
+    const cnt = document.createElement('span');
+    cnt.className = 'count';
+    cnt.textContent = rules.length + ' rule' + (rules.length!==1?'s':'');
+    head.appendChild(cnt);
+    area.appendChild(head);
+
+    const grid = document.createElement('div');
+    grid.className = 'ruleGrid';
+    rules.forEach(r=>{
+      const card = document.createElement('div');
+      card.className = 'ruleCard';
+      card.onclick = () => openModal(r.id);
+
+      const stamp = document.createElement('span');
+      stamp.className = 'stamp';
+      stamp.style.color = `var(${sec.color})`;
+      stamp.textContent = r.id;
+      card.appendChild(stamp);
+
+      const arrow = document.createElement('div');
+      arrow.className = 'arrow';
+      arrow.textContent = '↗';
+      card.appendChild(arrow);
+
+      const h3 = document.createElement('h3');
+      h3.textContent = r.title;
+      card.appendChild(h3);
+
+      const snip = document.createElement('div');
+      snip.className = 'snippet';
+      snip.innerHTML = '<span class="x">'+escapeHtml(truncate(r.wrong,58))+'</span><br><span class="ck">'+escapeHtml(truncate(r.right,58))+'</span>';
+      card.appendChild(snip);
+
+      grid.appendChild(card);
+    });
+    area.appendChild(grid);
+  });
+
+  if(area.children.length===0){
+    const empty = document.createElement('div');
+    empty.style.cssText = 'padding:60px 20px;text-align:center;color:var(--ink-soft);';
+    empty.textContent = 'No rules match your search.';
+    area.appendChild(empty);
+  }
+}
+
+function truncate(s,n){ return s.length>n ? s.slice(0,n-1)+'…' : s; }
+function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ---- Modal detail with mini quiz ---- */
+function openModal(ruleId){
+  const r = RULES.find(x=>x.id===ruleId);
+  const sec = secInfo(r.sec);
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay';
+  overlay.onclick = e => { if(e.target===overlay) overlay.remove(); };
+
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+
+  modal.innerHTML = `
+    <button class="closeBtn" aria-label="Close">✕</button>
+    <div class="modalStamp" style="color:var(${sec.color})">${r.id} — ${sec.name}</div>
+    <h2>${r.title}</h2>
+    <div class="exBlock">
+      <div class="exRow wrong"><span class="tag">✕</span><span>${escapeHtml(r.wrong)}</span></div>
+      <div class="exRow right"><span class="tag">✓</span><span>${escapeHtml(r.right)}</span></div>
+    </div>
+    <div class="explainBox">${r.rule}</div>
+    <div class="quizBox">
+      <div class="qLabel">Try it</div>
+      <div class="qSentence">${r.q}</div>
+      <div class="choiceRow" id="modalChoices"></div>
+      <div class="quizWhy" id="modalWhy">${r.why}</div>
+    </div>
+  `;
+
+  modal.querySelector('.closeBtn').onclick = () => overlay.remove();
+
+  const choiceRow = modal.querySelector('#modalChoices');
+  const whyBox = modal.querySelector('#modalWhy');
+  r.choices.forEach((c,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'choiceBtn';
+    btn.innerHTML = c;
+    btn.onclick = () => {
+      [...choiceRow.children].forEach(b=>b.disabled=true);
+      if(i===r.answer){ btn.classList.add('correct'); }
+      else{
+        btn.classList.add('incorrect');
+        choiceRow.children[r.answer].classList.add('correct');
+      }
+      whyBox.classList.add('show');
+    };
+    choiceRow.appendChild(btn);
+  });
+
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+}
+
+/* =========================================================
+   STUDY MODE — Leitner-style spaced repetition
+========================================================= */
+function buildQueue(){
+  const now = Date.now();
+  studyQueue = RULES
+    .filter(r => progress[r.id].due <= now)
+    .sort((a,b)=> progress[a.id].due - progress[b.id].due)
+    .map(r=>r.id);
+  currentCardId = studyQueue.length ? studyQueue[0] : null;
+  cardAnswered = false;
+  cardCorrect = false;
+}
+
+function renderStudy(){
+  const wrap = document.createElement('div');
+  wrap.className = 'studyWrap';
+
+  // stats
+  const total = RULES.length;
+  const dueNow = RULES.filter(r=>progress[r.id].due<=Date.now()).length;
+  const mastered = RULES.filter(r=>progress[r.id].box>=5).length;
+  const learning = RULES.filter(r=>progress[r.id].seen && progress[r.id].box<5).length;
+
+  const statBar = document.createElement('div');
+  statBar.className = 'statBar';
+  statBar.innerHTML = `
+    <div class="statPill"><span class="n">${total}</span><span class="l">Total rules</span></div>
+    <div class="statPill"><span class="n">${dueNow}</span><span class="l">Due now</span></div>
+    <div class="statPill"><span class="n">${learning}</span><span class="l">Learning</span></div>
+    <div class="statPill"><span class="n" style="color:var(--green)">${mastered}</span><span class="l">Mastered</span></div>
+  `;
+  wrap.appendChild(statBar);
+
+  const progressPct = Math.round((mastered/total)*100);
+  const track = document.createElement('div');
+  track.className = 'progressTrack';
+  track.innerHTML = `<div class="progressFill" style="width:${progressPct}%"></div>`;
+  wrap.appendChild(track);
+
+  const banner = document.createElement('div');
+  banner.className = 'noteBanner';
+  banner.innerHTML = `<b>How this works:</b> Answer each card, then rate how well you knew it — Again, Hard, Good, or Easy — just like Anki. Easier ratings push a rule further out before it returns; missing it brings it right back. Progress lives in this browser tab only, so use <b>Export</b> below to save it and <b>Import</b> to pick up later.`;
+  wrap.appendChild(banner);
+
+  if(!currentCardId){
+    const done = document.createElement('div');
+    done.className = 'doneCard';
+    done.innerHTML = `
+      <h2>${dueNow===0 && studyQueue.length===0 ? "You're all caught up 🎉" : "Nothing due right now"}</h2>
+      <p>${mastered===total ? 'Every rule has reached the mastered box.' : 'Come back later, or review everything again right now regardless of schedule.'}</p>
+      <div class="toolsRow">
+        <button class="primaryBtn" id="reviewAllBtn">Review all 50 now</button>
+        <button class="ghostBtn" id="exportBtn2">Export progress</button>
+        <button class="ghostBtn" id="importBtn2">Import progress</button>
+        <input type="file" id="fileInput2" accept="application/json">
+      </div>
+    `;
+    wrap.appendChild(done);
+    app.appendChild(wrap);
+    done.querySelector('#reviewAllBtn').onclick = () => {
+      studyQueue = RULES.map(r=>r.id);
+      currentCardId = studyQueue[0];
+      cardAnswered=false; cardCorrect=false;
+      render();
+    };
+    done.querySelector('#exportBtn2').onclick = exportProgress;
+    done.querySelector('#importBtn2').onclick = () => done.querySelector('#fileInput2').click();
+    done.querySelector('#fileInput2').onchange = importProgress;
+    return;
+  }
+
+  const r = RULES.find(x=>x.id===currentCardId);
+  const sec = secInfo(r.sec);
+  const p = progress[r.id];
+
+  const card = document.createElement('div');
+  card.className = 'card3d';
+
+  const stampWrap = document.createElement('div');
+  stampWrap.className = 'stamp';
+  stampWrap.style.cssText = `color:var(${sec.color}); border:1.3px solid currentColor; border-radius:999px; padding:3px 10px; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:11px;`;
+  stampWrap.textContent = `${r.id} · ${sec.name} · box ${p.box}/6`;
+  card.appendChild(stampWrap);
+
+  const front = document.createElement('div');
+  front.className = 'cardFront';
+  front.innerHTML = r.q;
+  card.appendChild(front);
+
+  const choices = document.createElement('div');
+  choices.className = 'cardChoices';
+  card.appendChild(choices);
+
+  const reveal = document.createElement('div');
+  reveal.className = 'revealBox';
+  reveal.style.display = 'none';
+  reveal.innerHTML = `<div class="ruleLine"><b>${r.title}.</b> ${r.rule}</div><div class="rateRow" id="rateRow"></div>`;
+  card.appendChild(reveal);
+
+  r.choices.forEach((c,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'cardChoiceBtn';
+    btn.innerHTML = c;
+    btn.onclick = () => {
+      if(cardAnswered) return;
+      cardAnswered = true;
+      cardCorrect = (i===r.answer);
+      [...choices.children].forEach(b=>b.disabled=true);
+      if(i===r.answer) btn.classList.add('correct');
+      else{
+        btn.classList.add('incorrect');
+        choices.children[r.answer].classList.add('correct');
+      }
+      reveal.style.display = 'block';
+      buildRateButtons();
+    };
+    choices.appendChild(btn);
+  });
+
+  function buildRateButtons(){
+    const rateRow = reveal.querySelector('#rateRow');
+    rateRow.innerHTML = '';
+    const opts = [
+      {label:'Again', cls:'again', delta:'box → 0', fn:()=>rate(0)},
+      {label:'Hard', cls:'hard', delta:'box stays', fn:()=>rate(Math.max(p.box-0,p.box))},
+      {label:'Good', cls:'good', delta:'box +1', fn:()=>rate(Math.min(p.box+1,6))},
+      {label:'Easy', cls:'easy', delta:'box +2', fn:()=>rate(Math.min(p.box+2,6))},
+    ];
+    // If they got it wrong on the first try, nudge them toward "Again"/"Hard"
+    opts.forEach(o=>{
+      const b = document.createElement('button');
+      b.className = 'rateBtn ' + o.cls;
+      b.innerHTML = o.label + '<span class="sub">'+o.delta+'</span>';
+      b.onclick = o.fn;
+      rateRow.appendChild(b);
+    });
+  }
+
+  function rate(newBox){
+    p.box = newBox;
+    p.seen = true;
+    const days = BOX_INTERVALS_DAYS[newBox] ?? 90;
+    p.due = Date.now() + days*24*60*60*1000 + (days===0 ? 1000*30 : 0);
+    // advance queue
+    studyQueue.shift();
+    currentCardId = studyQueue.length ? studyQueue[0] : null;
+    cardAnswered = false; cardCorrect = false;
+    render();
+  }
+
+  wrap.appendChild(card);
+
+  const legend = document.createElement('div');
+  legend.className = 'boxLegend';
+  legend.innerHTML = `
+    <span><i style="background:#A6362B"></i>Again = review almost immediately</span>
+    <span><i style="background:#B5651D"></i>Hard = same box</span>
+    <span><i style="background:#2F6E4F"></i>Good = next box (${BOX_INTERVALS_DAYS.slice(1).join('d, ')}d…)</span>
+    <span><i style="background:#2A6E7F"></i>Easy = skip a box</span>
+  `;
+  wrap.appendChild(legend);
+
+  const toolsRow = document.createElement('div');
+  toolsRow.className = 'toolsRow';
+  toolsRow.innerHTML = `
+    <button class="ghostBtn" id="exportBtn">Export progress</button>
+    <button class="ghostBtn" id="importBtn">Import progress</button>
+    <input type="file" id="fileInput" accept="application/json">
+  `;
+  wrap.appendChild(toolsRow);
+  app.appendChild(wrap);
+
+  document.getElementById('exportBtn').onclick = exportProgress;
+  document.getElementById('importBtn').onclick = () => document.getElementById('fileInput').click();
+  document.getElementById('fileInput').onchange = importProgress;
+}
+
+function exportProgress(){
+  const data = JSON.stringify({exportedAt:new Date().toISOString(), progress}, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'grammar-focus-progress.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function importProgress(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try{
+      const parsed = JSON.parse(ev.target.result);
+      if(parsed && parsed.progress){
+        Object.keys(parsed.progress).forEach(id=>{
+          if(progress[id]) progress[id] = parsed.progress[id];
+        });
+        buildQueue();
+        render();
+        alert('Progress imported.');
+      } else {
+        alert('That file does not look like a Grammar Focus progress export.');
+      }
+    }catch(err){
+      alert('Could not read that file.');
+    }
+  };
+  reader.readAsText(file);
+}
+
+render();
+</script>
+</body>
+</html> importProgress(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try{
+      const parsed = JSON.parse(ev.target.result);
+      if(parsed && parsed.progress){
+        Object.keys(parsed.progress).forEach(id=>{
+          if(progress[id]) progress[id] = parsed.progress[id];
+        });
+        buildQueue();
+        render();
+        alert('Progress imported.');
+      } else {
+        alert('That file does not look like a Grammar Focus progress export.');
+      }
+    }catch(err){
+      alert('Could not read that file.');
+    }
+  };
+  reader.readAsText(file);
+}
+
+render();
+</script>
+</body>
+  </html>
